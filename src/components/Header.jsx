@@ -46,22 +46,28 @@ const Header = () => {
 
   return (
     <>
-      <header className="flex w-full items-center justify-between bg-white px-3 py-2 shadow-lg">
+      <header className="flex w-full items-center justify-between bg-[#1a365d] px-3 py-2 shadow-lg">
         <div className="flex items-center">
           <GiHamburgerMenu
-            className="mr-5 h-6 w-6 cursor-pointer text-black"
+            className="mr-5 h-6 w-6 cursor-pointer text-[#ffffff]"
             onClick={handleSidebar}
           />
           <Link to="/allJobs">
-            <img src={logo} alt="logo" className="w-20 cursor-pointer" />
+            <div className="rounded-lg bg-[#ffffff] p-1">
+              <img
+                src={logo}
+                alt="logo"
+                className="h-12 w-24 cursor-pointer object-contain md:w-32"
+              />
+            </div>
           </Link>
         </div>
 
-        <h1 className="hidden text-center font-bold lg:block">
+        <h1 className="hidden text-center font-bold text-[#ffffff] lg:block">
           {name} - {position}
         </h1>
 
-        <h1 className="block text-center font-bold lg:hidden">
+        <h1 className="block text-center font-bold text-[#ffffff] lg:hidden">
           {name}
           <br />
           {position}
@@ -69,7 +75,7 @@ const Header = () => {
 
         <div className="text-right">
           <button
-            className="text-md rounded-full border border-[#7491d9] bg-white px-4 py-2 font-semibold text-[#7491d9] hover:bg-[#ebedf2]"
+            className="text-md rounded-full border-2 border-[#ffffff] bg-[#ffffff] px-4 py-2 font-semibold text-[#1a365d] hover:bg-[#1a365d] hover:text-[#ffffff]"
             onClick={handleLogout}
           >
             Logout
