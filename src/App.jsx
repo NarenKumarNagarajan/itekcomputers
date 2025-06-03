@@ -1,7 +1,17 @@
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import PropTypes from "prop-types";
+import { Suspense, lazy } from "react";
+import { Provider } from "react-redux";
+import appStore from "./redux/appStore";
+import ErrorBoundary from "./components/common/ErrorBoundary";
+import LoadingSpinner from "./components/common/LoadingSpinner";
 
 import { TbLoader3 } from "react-icons/tb";
 import Login from "./components/Login";
@@ -38,13 +48,13 @@ const Layout = ({ children }) => {
   }
 
   return (
-    <>
+    <div className="flex h-screen flex-col">
       <Header />
-      <div className="relative flex">
+      <div className="flex flex-1 overflow-hidden">
         <Sidebar />
-        {children}
+        <main className="flex-1 overflow-auto">{children}</main>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -52,104 +62,106 @@ Layout.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-function App() {
+// Lazy load components
+const LoginComponent = lazy(() => import("./components/Login"));
+const AllJobsComponent = lazy(() => import("./components/AllJobs"));
+const JobSheetComponent = lazy(() => import("./components/JobSheet"));
+const ChangePasswordComponent = lazy(
+  () => import("./components/ChangePassword"),
+);
+const ModifyOptionsComponent = lazy(() => import("./components/ModifyOptions"));
+const CustomerDetailsComponent = lazy(
+  () => import("./components/CustomerDetails"),
+);
+const CreateUserComponent = lazy(() => import("./components/CreateUser"));
+const UserListComponent = lazy(() => import("./components/UserList"));
+const InsightsComponent = lazy(() => import("./components/Insights"));
+
+const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-
-        <Route
-          path="/allJobs"
-          element={
-            <Layout>
-              <AllJobs />
-            </Layout>
-          }
-        />
-        <Route
-          path="/jobSheet"
-          element={
-            <Layout>
-              <JobSheet />
-            </Layout>
-          }
-        />
-        <Route
-          path="/editPage"
-          element={
-            <Layout>
-              <EditPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/printPage"
-          element={
-            <Layout>
-              <PrintPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/changePassword"
-          element={
-            <Layout>
-              <ChangePassword />
-            </Layout>
-          }
-        />
-        <Route
-          path="/modifyOptions"
-          element={
-            <Layout>
-              <ModifyOptions />
-            </Layout>
-          }
-        />
-        <Route
-          path="/customerDetails"
-          element={
-            <Layout>
-              <CustomerDetails />
-            </Layout>
-          }
-        />
-        <Route
-          path="/createUser"
-          element={
-            <Layout>
-              <CreateUser />
-            </Layout>
-          }
-        />
-        <Route
-          path="/userList"
-          element={
-            <Layout>
-              <UserList />
-            </Layout>
-          }
-        />
-        <Route
-          path="/insightsOverview"
-          element={
-            <Layout>
-              <Insights />
-            </Layout>
-          }
-        />
-
-        <Route
-          path="*"
-          element={
-            <Layout>
-              <ErrorPage />
-            </Layout>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <Provider store={appStore}>
+      <ErrorBoundary>
+        <Router>
+          <Suspense
+            fallback={
+              <div className="flex h-screen items-center justify-center bg-[#1a365d]">
+                <LoadingSpinner size="large" />
+              </div>
+            }
+          >
+            <Routes>
+              <Route path="/" element={<LoginComponent />} />
+              <Route
+                path="/allJobs"
+                element={
+                  <Layout>
+                    <AllJobsComponent />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/jobSheet"
+                element={
+                  <Layout>
+                    <JobSheetComponent />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/changePassword"
+                element={
+                  <Layout>
+                    <ChangePasswordComponent />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/modifyOptions"
+                element={
+                  <Layout>
+                    <ModifyOptionsComponent />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/customerDetail"
+                element={
+                  <Layout>
+                    <CustomerDetailsComponent />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/createUser"
+                element={
+                  <Layout>
+                    <CreateUserComponent />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/userList"
+                element={
+                  <Layout>
+                    <UserListComponent />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/insightsOverview"
+                element={
+                  <Layout>
+                    <InsightsComponent />
+                  </Layout>
+                }
+              />
+              <Route path="*" element={<ErrorPage />} />
+            </Routes>
+          </Suspense>
+        </Router>
+      </ErrorBoundary>
+    </Provider>
   );
-}
+};
 
 export default App;

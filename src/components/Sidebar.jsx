@@ -1,14 +1,28 @@
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { setActiveMenu, toggleSidebar } from "../redux/sidebarSlice";
 import { ADMIN_MENU_ITEMS, USER_MENU_ITEMS } from "../utils/globalConstants";
+import { useEffect } from "react";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const { isSidebarOpen, activeMenu } = useSelector(
     (state) => state.sidebarSlice,
   );
   const { position } = useSelector((store) => store.loginSlice);
+
+  // Hide sidebar on login page
+  if (location.pathname === "/") {
+    return null;
+  }
+
+  // Set sidebar open/close only on initial mount
+  useEffect(() => {
+    const isMobile = window.innerWidth < 1024;
+    dispatch(toggleSidebar(!isMobile));
+    // eslint-disable-next-line
+  }, []);
 
   const handleMenuClick = (menuItem) => {
     const menuKey = menuItem.title.toLowerCase().replace(" ", "");
@@ -16,7 +30,7 @@ const Sidebar = () => {
 
     // Close sidebar for mobile view
     if (window.innerWidth < 1024) {
-      dispatch(toggleSidebar(false)); // Dispatch action to close the sidebar
+      dispatch(toggleSidebar(false));
     }
   };
 

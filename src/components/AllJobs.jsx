@@ -181,45 +181,51 @@ const AllJobs = () => {
         </p>
       )}
       <div className="flex w-full justify-center">
-        <div className="flex w-full flex-col items-center lg:w-1/3">
+        <div className="flex w-full flex-col items-center lg:w-2/3">
           <form
-            className="w-full rounded-lg bg-sky-700 p-4 font-bold text-white"
+            className="w-full rounded-lg bg-[#1a365d] p-4 font-bold text-white"
             onSubmit={handleSubmit}
           >
             {/* From Date */}
             <div className="mb-4 flex w-full items-center">
-              <label className="w-[100px] text-xl font-bold">From:</label>
+              <label className="w-[100px] text-left text-xl font-bold text-white">
+                From:
+              </label>
               <DatePicker
                 selected={parse(filters.inDateFrom, "dd/MM/yyyy", new Date())}
                 onChange={handleDateChange("inDateFrom")}
                 dateFormat="dd/MM/yyyy"
                 showYearDropdown
-                className="w-full max-w-[300px] flex-1 rounded-md border border-slate-800 px-2 py-1 text-black"
+                className="w-full flex-1 rounded-md border-2 border-white bg-white px-2 py-1 text-black focus:border-white focus:outline-none"
                 placeholderText="Select From Date"
               />
             </div>
 
             {/* To Date */}
             <div className="mb-4 flex w-full items-center">
-              <label className="w-[100px] text-xl font-bold">To:</label>
+              <label className="w-[100px] text-left text-xl font-bold text-white">
+                To:
+              </label>
               <DatePicker
                 selected={parse(filters.inDateTo, "dd/MM/yyyy", new Date())}
                 onChange={handleDateChange("inDateTo")}
                 dateFormat="dd/MM/yyyy"
                 showYearDropdown
-                className="w-full max-w-[300px] flex-1 rounded-md border border-slate-800 px-2 py-1 text-black"
+                className="w-full flex-1 rounded-md border-2 border-white bg-white px-2 py-1 text-black focus:border-white focus:outline-none"
                 placeholderText="Select To Date"
               />
             </div>
 
             {/* Range */}
             <div className="mb-4 flex w-full items-center">
-              <label className="w-[100px] text-xl font-bold">Range:</label>
+              <label className="w-[100px] text-left text-xl font-bold text-white">
+                Range:
+              </label>
               <select
                 name="rangeSelected"
                 value={filters.rangeSelected}
                 onChange={(e) => handleRangeChange(e.target.value)}
-                className="w-full max-w-[300px] flex-1 rounded-md border border-slate-800 px-2 py-1 text-black focus:border-slate-800 focus:ring-0"
+                className="w-full flex-1 rounded-md border-2 border-white bg-white px-2 py-1 text-black focus:border-white focus:outline-none"
               >
                 {dateFilters.map((status) => (
                   <option key={status} value={status}>
@@ -231,14 +237,16 @@ const AllJobs = () => {
 
             {/* Status */}
             <div className="mb-4 flex w-full items-center">
-              <label className="w-[100px] text-xl font-bold">Status:</label>
+              <label className="w-[100px] text-left text-xl font-bold text-white">
+                Status:
+              </label>
               <select
                 name="status"
                 value={filters.status}
                 onChange={(e) =>
                   setFilters((prev) => ({ ...prev, status: e.target.value }))
                 }
-                className="w-full max-w-[300px] flex-1 rounded-md border border-slate-800 px-2 py-1 text-black focus:border-slate-800 focus:ring-0"
+                className="w-full flex-1 rounded-md border-2 border-white bg-white px-2 py-1 text-black focus:border-white focus:outline-none"
               >
                 {statusPicker.map((status) => (
                   <option key={status} value={status}>
@@ -250,8 +258,10 @@ const AllJobs = () => {
 
             {/* Job Count */}
             <div className="mb-4 flex w-full items-center font-bold">
-              <label className="w-[100px] text-xl">Jobs:</label>
-              <p className="w-full max-w-[300px] flex-1 text-xl">
+              <label className="w-[100px] text-left text-xl text-white">
+                Jobs:
+              </label>
+              <p className="w-full flex-1 text-xl text-white">
                 {allData.length}
               </p>
             </div>

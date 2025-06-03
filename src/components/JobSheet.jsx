@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { useForm } from "../hooks/useForm";
 import { useApiData } from "../hooks/useApiData";
 import { useFormValidation } from "../hooks/useFormValidation";
-import { Input } from "./common/Input";
+import Input from "./common/Input";
 import {
   TextareaField,
   SelectField,

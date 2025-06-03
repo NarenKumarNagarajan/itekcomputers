@@ -1,115 +1,158 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Cookies from "js-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import logo from "../images/logo.png";
-import background from "../images/background.jpg";
-import { LOGIN_URL, COOKIE_TIME } from "../utils/globalConstants";
+import { COOKIE_TIME } from "../utils/globalConstants";
 import useVerifyLogin from "../hooks/useVerifyLogin";
 import { addUser } from "../redux/loginSlice";
-import { BiSolidHide, BiSolidShow } from "react-icons/bi";
+import { useApi } from "../hooks/useApi";
+import { api } from "../services/api";
+import Input from "./common/Input";
+import Button from "./common/Button";
+import ErrorMessage from "./common/ErrorMessage";
+import LoadingSpinner from "./common/LoadingSpinner";
+import { FaSignInAlt } from "react-icons/fa";
 
 const Login = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [hidePassword, setHidePassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [errors, setErrors] = useState({
+    username: "",
+    password: "",
+    general: "",
+  });
 
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const { execute: login, isLoading, error: apiError } = useApi();
 
   useVerifyLogin(location.pathname);
 
-  const formValidation = async () => {
-    if (userName === "") {
-      setErrorMessage("Enter Username");
-    } else if (password === "") {
-      setErrorMessage("Enter Password");
-    } else {
-      try {
-        const response = await fetch(LOGIN_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            USERNAME: userName,
-            PASSWORD: password,
-          }),
-        });
+  const validateForm = useCallback(() => {
+    let isValid = true;
+    const newErrors = {
+      username: "",
+      password: "",
+      general: "",
+    };
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          setErrorMessage(errorData.message);
-        } else {
-          setErrorMessage(null);
-          const data = await response.json();
-          Cookies.set("userCookie", JSON.stringify(data), {
-            expires: COOKIE_TIME,
-          });
-          dispatch(addUser(data));
-          navigate("/allJobs", { replace: true });
-        }
-      } catch (error) {
-        setErrorMessage(error.message || "An unexpected error occurred");
-      }
+    if (!userName.trim()) {
+      newErrors.username = "Username is required";
+      isValid = false;
+    }
+
+    if (!password.trim()) {
+      newErrors.password = "Password is required";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  }, [userName, password]);
+
+  const formValidation = useCallback(async () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      const data = await login(() =>
+        api.login({ USERNAME: userName, PASSWORD: password }),
+      );
+
+      setErrors({
+        username: "",
+        password: "",
+        general: "",
+      });
+
+      Cookies.set("userCookie", JSON.stringify(data), {
+        expires: COOKIE_TIME,
+      });
+      dispatch(addUser(data));
+      navigate("/allJobs", { replace: true });
+    } catch (error) {
+      setErrors((prev) => ({
+        ...prev,
+        general: error.message || "An unexpected error occurred",
+      }));
+    }
+  }, [userName, password, validateForm, login, dispatch, navigate]);
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      formValidation();
     }
   };
 
   return (
     <div
-      className="flex h-screen flex-col items-center justify-center bg-cover bg-center"
+      className="flex h-screen flex-col items-center justify-center"
       style={{
-        backgroundImage: `url(${background})`,
+        backgroundColor: "#1a365d",
       }}
     >
-      <img src={logo} alt="logo" className="relative w-64" />
+      <img
+        src={logo}
+        alt="logo"
+        className="relative mb-4 w-64 rounded-lg bg-white p-4"
+      />
 
-      {errorMessage && (
-        <p className="relative mt-6 w-5/6 rounded-lg border border-red-500 bg-white p-1 text-center font-bold text-red-500 lg:w-1/3">
-          Error : {errorMessage}
-        </p>
-      )}
+      <ErrorMessage
+        message={errors.general || apiError}
+        type={apiError ? "error" : "error"}
+      />
+
       <form
         onSubmit={(e) => e.preventDefault()}
+        onKeyDown={handleKeyPress}
         className="relative flex w-5/6 flex-col justify-center lg:w-1/3"
       >
-        <input
+        <Input
           type="text"
-          placeholder="Enter Username"
-          className="mt-6 w-full rounded-full border-0 bg-black/75 px-4 py-2 text-white selection:border-0"
+          name="username"
           value={userName}
-          onChange={(e) => setUserName(e.target.value)}
+          onChange={(e) => {
+            setUserName(e.target.value);
+            setErrors((prev) => ({ ...prev, username: "" }));
+          }}
+          error={errors.username}
+          placeholder="Enter Username"
           autoFocus
+          label="Username"
         />
-        <div className="relative mt-6 w-full">
-          <input
-            type={hidePassword ? "text" : "password"}
-            placeholder="Enter Password"
-            className="w-full rounded-full border-0 bg-black/75 px-4 py-2 text-white selection:border-0"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <span
-            className="absolute inset-y-0 right-3 flex cursor-pointer items-center text-white"
-            onClick={() => setHidePassword((prev) => !prev)}
-          >
-            {hidePassword ? (
-              <BiSolidHide size={24} />
-            ) : (
-              <BiSolidShow size={24} />
-            )}
-          </span>
-        </div>
 
-        <button
-          className="mx-auto mt-6 block w-32 rounded-full border border-black bg-black px-4 py-2 text-white"
+        <Input
+          type="password"
+          name="password"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            setErrors((prev) => ({ ...prev, password: "" }));
+          }}
+          error={errors.password}
+          placeholder="Enter Password"
+          label="Password"
+        />
+
+        <Button
           onClick={formValidation}
+          disabled={isLoading}
+          className="mt-2"
+          icon={
+            isLoading ? (
+              <LoadingSpinner size="small" />
+            ) : (
+              <FaSignInAlt size={20} />
+            )
+          }
         >
-          Sign In
-        </button>
+          {isLoading ? "Signing In..." : "Sign In"}
+        </Button>
       </form>
     </div>
   );

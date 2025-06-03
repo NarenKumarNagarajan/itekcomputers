@@ -1,22 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const isSmallScreen = () => {
-  return window.matchMedia("(max-width: 767px)").matches;
+  return window.matchMedia("(max-width: 1024px)").matches;
 };
 
 const sidebarSlice = createSlice({
   name: "sidebarSlice",
   initialState: {
     isSidebarOpen: !isSmallScreen(),
-    activeMenu: null,
+    activeMenu: "alljobs",
   },
   reducers: {
-    toggleSidebar: (state) => {
-      state.isSidebarOpen = !state.isSidebarOpen;
+    toggleSidebar: (state, action) => {
+      if (typeof action.payload === "boolean") {
+        state.isSidebarOpen = action.payload;
+      } else {
+        state.isSidebarOpen = !state.isSidebarOpen;
+      }
     },
     setActiveMenu: (state, action) => {
-      state.activeMenu =
-        state.activeMenu === action.payload ? null : action.payload;
+      state.activeMenu = action.payload;
     },
   },
 });

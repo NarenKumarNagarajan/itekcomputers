@@ -4,10 +4,12 @@ import { useCallback } from "react";
 import Cookies from "js-cookie";
 
 import { GiHamburgerMenu } from "react-icons/gi";
+import { IoPower } from "react-icons/io5";
 import { toggleSidebar } from "../redux/sidebarSlice";
 import logo from "../images/logo.png";
 import { removeUser } from "../redux/loginSlice";
 import { LOGOUT_URL } from "../utils/globalConstants";
+import Button from "./common/Button";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -74,12 +76,13 @@ const Header = () => {
         </h1>
 
         <div className="text-right">
-          <button
-            className="text-md rounded-full border-2 border-[#ffffff] bg-[#ffffff] px-4 py-2 font-semibold text-[#1a365d] hover:bg-[#1a365d] hover:text-[#ffffff]"
+          <Button
             onClick={handleLogout}
+            className="w-auto"
+            icon={<IoPower size={20} />}
           >
             Logout
-          </button>
+          </Button>
         </div>
       </header>
     </>
