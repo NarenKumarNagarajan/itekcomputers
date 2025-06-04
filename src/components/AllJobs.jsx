@@ -9,6 +9,9 @@ import {
   ALL_DATA_URL,
   DELETE_JOB_URL,
   PICKERS_URL,
+  DATE_FILTERS,
+  DEFAULT_STATUS,
+  DEFAULT_DATE_FILTER,
 } from "../utils/globalConstants";
 import { getDateRange } from "../utils/helperFunc";
 import JobDetailPopUp from "./JobDetailPopUp";
@@ -16,28 +19,15 @@ import AllDataTable from "./AllDataTable";
 
 const currentYear = new Date().getFullYear();
 
-const dateFilters = [
-  "This Financial Year",
-  "Last Financial Year",
-  "This Year",
-  "Last Year",
-  "This Month",
-  "Last Month",
-  "Today",
-  "Yesterday",
-  "This Week",
-  "Last Week",
-];
-
 const AllJobs = () => {
   const [allData, setAllData] = useState([]);
   const [filters, setFilters] = useState({
     inDateFrom: format(new Date(currentYear, 3, 1), "dd/MM/yyyy"),
     inDateTo: format(new Date(currentYear + 1, 2, 31), "dd/MM/yyyy"),
-    rangeSelected: "This Financial Year",
-    status: "All",
+    rangeSelected: DEFAULT_DATE_FILTER,
+    status: DEFAULT_STATUS,
   });
-  const [statusPicker, setStatusPicker] = useState(["All"]);
+  const [statusPicker, setStatusPicker] = useState([DEFAULT_STATUS]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedJobID, setSelectedJobID] = useState(null);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
@@ -187,8 +177,8 @@ const AllJobs = () => {
             onSubmit={handleSubmit}
           >
             {/* From Date */}
-            <div className="mb-4 flex w-full items-center">
-              <label className="w-[100px] text-left text-xl font-bold text-white">
+            <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
+              <label className="text-left text-xl font-bold text-white">
                 From:
               </label>
               <DatePicker
@@ -196,14 +186,14 @@ const AllJobs = () => {
                 onChange={handleDateChange("inDateFrom")}
                 dateFormat="dd/MM/yyyy"
                 showYearDropdown
-                className="w-full flex-1 rounded-md border-2 border-white bg-white px-2 py-1 text-black focus:border-white focus:outline-none"
+                className="w-full rounded-md border-2 border-white bg-white px-2 py-1 text-black focus:border-white focus:outline-none"
                 placeholderText="Select From Date"
               />
             </div>
 
             {/* To Date */}
-            <div className="mb-4 flex w-full items-center">
-              <label className="w-[100px] text-left text-xl font-bold text-white">
+            <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
+              <label className="text-left text-xl font-bold text-white">
                 To:
               </label>
               <DatePicker
@@ -211,14 +201,14 @@ const AllJobs = () => {
                 onChange={handleDateChange("inDateTo")}
                 dateFormat="dd/MM/yyyy"
                 showYearDropdown
-                className="w-full flex-1 rounded-md border-2 border-white bg-white px-2 py-1 text-black focus:border-white focus:outline-none"
+                className="w-full rounded-md border-2 border-white bg-white px-2 py-1 text-black focus:border-white focus:outline-none"
                 placeholderText="Select To Date"
               />
             </div>
 
             {/* Range */}
-            <div className="mb-4 flex w-full items-center">
-              <label className="w-[100px] text-left text-xl font-bold text-white">
+            <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
+              <label className="text-left text-xl font-bold text-white">
                 Range:
               </label>
               <select
@@ -227,7 +217,7 @@ const AllJobs = () => {
                 onChange={(e) => handleRangeChange(e.target.value)}
                 className="w-full flex-1 rounded-md border-2 border-white bg-white px-2 py-1 text-black focus:border-white focus:outline-none"
               >
-                {dateFilters.map((status) => (
+                {DATE_FILTERS.map((status) => (
                   <option key={status} value={status}>
                     {status}
                   </option>
@@ -236,8 +226,8 @@ const AllJobs = () => {
             </div>
 
             {/* Status */}
-            <div className="mb-4 flex w-full items-center">
-              <label className="w-[100px] text-left text-xl font-bold text-white">
+            <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
+              <label className="text-left text-xl font-bold text-white">
                 Status:
               </label>
               <select
@@ -246,7 +236,7 @@ const AllJobs = () => {
                 onChange={(e) =>
                   setFilters((prev) => ({ ...prev, status: e.target.value }))
                 }
-                className="w-full flex-1 rounded-md border-2 border-white bg-white px-2 py-1 text-black focus:border-white focus:outline-none"
+                className="w-full rounded-md border-2 border-white bg-white px-2 py-1 text-black focus:border-white focus:outline-none"
               >
                 {statusPicker.map((status) => (
                   <option key={status} value={status}>
@@ -257,18 +247,14 @@ const AllJobs = () => {
             </div>
 
             {/* Job Count */}
-            <div className="mb-4 flex w-full items-center font-bold">
-              <label className="w-[100px] text-left text-xl text-white">
-                Jobs:
-              </label>
-              <p className="w-full flex-1 text-xl text-white">
-                {allData.length}
-              </p>
+            <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
+              <label className="text-left text-xl text-white">Jobs:</label>
+              <p className="text-xl text-white">{allData.length}</p>
             </div>
 
             {/* Submit Button */}
             <div className="mt-4 flex items-center justify-center">
-              <button className="rounded bg-amber-400 px-2 py-1 hover:bg-amber-500">
+              <button className="flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-[#1a365d] px-3 py-1.5 text-sm font-bold text-white transition-colors hover:bg-white hover:text-[#1a365d]">
                 Submit
               </button>
             </div>
@@ -291,7 +277,15 @@ const AllJobs = () => {
       )}
 
       {isDeletePopupOpen && (
-        <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-gray-900">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#1a365d]/50"
+          onClick={(e) => {
+            // Only close if clicking the overlay (not the popup content)
+            if (e.target === e.currentTarget) {
+              closeDeletePopup();
+            }
+          }}
+        >
           <div className="rounded-lg bg-white p-4 shadow-lg">
             <div>
               Do you want to delete user -{" "}
@@ -299,13 +293,13 @@ const AllJobs = () => {
             </div>
             <div className="mt-4 flex justify-center space-x-10">
               <button
-                className="rounded bg-indigo-500 px-4 py-2 font-bold text-white hover:bg-indigo-700"
+                className="flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-[#1a365d] px-3 py-1.5 text-sm font-bold text-white transition-colors hover:border-[#1a365d] hover:bg-white hover:text-[#1a365d]"
                 onClick={() => handleDelete(selectedJobID)}
               >
                 Delete
               </button>
               <button
-                className="rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700"
+                className="flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-red-500 px-3 py-1.5 text-sm font-bold text-white transition-colors hover:border-red-500 hover:bg-white hover:text-red-500"
                 onClick={closeDeletePopup}
               >
                 Close

@@ -1,5 +1,23 @@
 export const COOKIE_TIME = 1.5 / 24;
 
+/* ================ Form Constants ================ */
+
+export const DATE_FILTERS = [
+  "This Financial Year",
+  "Last Financial Year",
+  "This Year",
+  "Last Year",
+  "This Month",
+  "Last Month",
+  "Today",
+  "Yesterday",
+  "This Week",
+  "Last Week",
+];
+
+export const DEFAULT_STATUS = "All";
+export const DEFAULT_DATE_FILTER = "This Financial Year";
+
 /* ================ Global Links are below ================ */
 
 export const LOGIN_URL = "http://localhost:7000/login";
@@ -97,3 +115,45 @@ export const USER_MENU_ITEMS = [
     link: "/insightsOverview",
   },
 ];
+
+/* ================ Button Styles ================ */
+
+export const BUTTON_BASE_STYLE =
+  "flex items-center justify-center gap-2 self-center rounded-full border-2 border-white px-3 py-2 text-sm font-bold text-white transition-colors";
+
+export const BUTTON_COLORS = {
+  PRIMARY: {
+    base: "bg-[#1a365d]",
+    hover: "hover:border-[#1a365d] hover:bg-white hover:text-[#1a365d]",
+  },
+  SUCCESS: {
+    base: "bg-[#16a34a]",
+    hover: "hover:border-[#16a34a] hover:bg-white hover:text-[#16a34a]",
+  },
+  DANGER: {
+    base: "bg-[#dc2626]",
+    hover: "hover:border-[#dc2626] hover:bg-white hover:text-[#dc2626]",
+  },
+};
+
+export const BUTTON_SIZES = {
+  SMALL: "w-[80px]",
+  MEDIUM: "w-[120px]",
+};
+
+// Table Headers
+export const TABLE_HEADERS = {
+  ALL_DATA_TABLE: [
+    "ID",
+    "JOB ID",
+    "NAME",
+    "MOBILE",
+    "IN",
+    "OUT",
+    "ASSETS",
+    "JOB STATUS",
+    "SOLUTION",
+    "AMOUNT",
+    "ACTION",
+  ],
+};

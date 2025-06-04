@@ -20,7 +20,7 @@ const Input = ({
   };
 
   return (
-    <div className="relative mb-6 flex items-center">
+    <div className="relative mb-6 flex flex-col">
       {label && (
         <label className="w-[100px] text-left text-white">{label}</label>
       )}
@@ -46,7 +46,7 @@ const Input = ({
           </button>
         )}
       </div>
-      {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
+      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
     </div>
   );
 };

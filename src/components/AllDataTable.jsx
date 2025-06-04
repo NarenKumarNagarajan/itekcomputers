@@ -2,39 +2,55 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import {
+  BUTTON_BASE_STYLE,
+  BUTTON_COLORS,
+  BUTTON_SIZES,
+  TABLE_HEADERS,
+} from "../utils/globalConstants";
+import JobDetailPopUp from "./JobDetailPopUp";
 
 const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
   const [search, setSearch] = useState("");
   const [filterData, setFilterData] = useState(allData);
+  const [selectedJobID, setSelectedJobID] = useState(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  const [jobToDelete, setJobToDelete] = useState(null);
 
   const navigate = useNavigate();
 
-  const { position } = useSelector((store) => store.loginSlice);
+  const { position, jwtToken } = useSelector((store) => store.loginSlice);
 
-  const tableHead = [
-    "ID",
-    "JOB ID",
-    "NAME",
-    "MOBILE",
-    "IN",
-    "OUT",
-    "ASSETS",
-    "JOB STATUS",
-    "SOLUTION",
-    "AMOUNT",
-    "ACTION",
-  ];
-
-  const editJob = (editJobID) => {
-    navigate(`/editPage?jobID=${editJobID}`);
+  const handleView = (jobID) => {
+    setSelectedJobID(jobID);
+    setIsPopupOpen(true);
   };
 
-  const triggerOpenPopup = (JOB_ID) => {
-    openPopup(JOB_ID);
+  const handleEdit = (jobID) => {
+    navigate(`/editJob?jobID=${jobID}`);
   };
 
-  const handleDeleteJob = (deleteJobID) => {
-    openDeletePopup(deleteJobID);
+  const handleDelete = (jobID) => {
+    setJobToDelete(jobID);
+    setIsDeletePopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+    setSelectedJobID(null);
+  };
+
+  const closeDeletePopup = () => {
+    setIsDeletePopupOpen(false);
+    setJobToDelete(null);
+  };
+
+  const confirmDelete = async () => {
+    if (jobToDelete) {
+      await openDeletePopup(jobToDelete);
+      closeDeletePopup();
+    }
   };
 
   const handleFilterDataInput = (e) => {
@@ -62,13 +78,13 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
       />
       <table className="w-full border-collapse overflow-auto border-2 border-[#ddd]">
         <thead>
-          <tr className="bg-black text-white">
-            {tableHead.map((heading, index) => (
+          <tr className="bg-[#1a365d] text-white">
+            {TABLE_HEADERS.ALL_DATA_TABLE.map((header) => (
               <th
-                key={index}
-                className="whitespace-nowrap border border-gray-300 px-2 py-1 text-center"
+                key={header}
+                className="border border-gray-300 px-2 py-1 text-center whitespace-nowrap"
               >
-                {heading}
+                {header}
               </th>
             ))}
           </tr>
@@ -80,54 +96,54 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
                 key={row.newID}
                 className={`hover:bg-gray-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-100"}`}
               >
-                <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
+                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
                   {row.newID}
                 </td>
-                <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
+                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
                   {row.JOB_ID}
                 </td>
-                <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
+                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
                   {row.NAME}
                 </td>
-                <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
+                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
                   {row.MOBILE}
                 </td>
-                <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
+                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
                   {row.IN_DATE}
                 </td>
-                <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
+                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
                   {row.OUT_DATE}
                 </td>
-                <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
+                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
                   {row.ASSETS}
                 </td>
-                <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
+                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
                   {row.JOB_STATUS}
                 </td>
                 <td className="flex-wrap border border-gray-300 px-2 py-1">
                   {row.SOLUTION_PROVIDED}
                 </td>
-                <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
+                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
                   {row.AMOUNT}
                 </td>
-                <td className="whitespace-nowrap border border-gray-300 px-2 py-1 text-center">
+                <td className="border border-gray-300 px-2 py-1 text-center whitespace-nowrap">
                   <div className="flex justify-center gap-4">
                     <button
-                      className="rounded bg-blue-500 px-2 py-1 font-bold text-white hover:bg-blue-700"
-                      onClick={() => triggerOpenPopup(row.JOB_ID)}
+                      className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
+                      onClick={() => handleView(row.JOB_ID)}
                     >
                       View
                     </button>
                     <button
-                      className="rounded bg-orange-600 px-2 py-1 font-bold text-white hover:bg-orange-800"
-                      onClick={() => editJob(row.JOB_ID)}
+                      className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
+                      onClick={() => handleEdit(row.JOB_ID)}
                     >
                       Edit
                     </button>
                     {position === "ADMIN" && (
                       <button
-                        className="rounded bg-red-500 px-2 py-1 font-bold text-white hover:bg-red-700"
-                        onClick={() => handleDeleteJob(row.JOB_ID)}
+                        className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+                        onClick={() => handleDelete(row.JOB_ID)}
                       >
                         Delete
                       </button>
@@ -138,13 +154,47 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
             ))
           ) : (
             <tr>
-              <td colSpan={tableHead.length} className="p-4 text-center">
+              <td
+                colSpan={TABLE_HEADERS.ALL_DATA_TABLE.length}
+                className="p-4 text-center"
+              >
                 No data available
               </td>
             </tr>
           )}
         </tbody>
       </table>
+      {isPopupOpen && (
+        <JobDetailPopUp
+          selectedJobID={selectedJobID}
+          closePopup={closePopup}
+          isPopupOpen={isPopupOpen}
+        />
+      )}
+      {isDeletePopupOpen && (
+        <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+          <div className="w-[400px] rounded-lg bg-white p-6 shadow-lg">
+            <h2 className="mb-4 text-center text-xl font-bold">Delete Job</h2>
+            <p className="mb-6 text-center">
+              Are you sure you want to delete this job?
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button
+                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
+                onClick={confirmDelete}
+              >
+                Delete
+              </button>
+              <button
+                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+                onClick={closeDeletePopup}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

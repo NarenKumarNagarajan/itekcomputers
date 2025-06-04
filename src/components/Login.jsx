@@ -99,18 +99,19 @@ const Login = () => {
       <img
         src={logo}
         alt="logo"
-        className="relative mb-4 w-64 rounded-lg bg-white p-4"
+        className="relative mb-8 w-64 rounded-lg bg-white p-4"
       />
 
       <ErrorMessage
         message={errors.general || apiError}
         type={apiError ? "error" : "error"}
+        className="mb-8"
       />
 
       <form
         onSubmit={(e) => e.preventDefault()}
         onKeyDown={handleKeyPress}
-        className="relative flex w-5/6 flex-col justify-center lg:w-1/3"
+        className="relative flex w-full flex-col justify-center px-4 md:w-2/3 lg:w-1/3"
       >
         <Input
           type="text"
@@ -123,7 +124,6 @@ const Login = () => {
           error={errors.username}
           placeholder="Enter Username"
           autoFocus
-          label="Username"
         />
 
         <Input
@@ -136,7 +136,6 @@ const Login = () => {
           }}
           error={errors.password}
           placeholder="Enter Password"
-          label="Password"
         />
 
         <Button
