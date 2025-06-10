@@ -1,20 +1,22 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 
-const useVerifyLogin = (navigateLink = "/") => {
+const useVerifyLogin = (defaultPath = "/") => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const hasCookie = Cookies.get("userCookie");
 
     if (!hasCookie) {
       navigate("/");
-    } else {
-      navigate(navigateLink === "/" ? "/allJobs" : navigateLink);
+    } else if (location.pathname === "/") {
+      // Only redirect to default path if we're on the root path
+      navigate(defaultPath);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate]);
+  }, []);
 };
 
 export default useVerifyLogin;

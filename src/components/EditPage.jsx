@@ -1,17 +1,30 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
-import { addDays, format, parse } from "date-fns";
-import PropTypes from "prop-types";
+import { format, parse } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
+import { useApiData } from "../hooks/useApiData";
 import {
   DATA_BY_JOB_ID_URL,
   EDIT_JOB_URL,
   PICKERS_URL,
 } from "../utils/globalConstants";
+import {
+  BUTTON_BASE_STYLE,
+  BUTTON_SIZES,
+  BUTTON_COLORS,
+} from "../utils/globalConstants";
 
 const EditPage = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const editJobID = queryParams.get("jobID");
+  const navigate = useNavigate();
+  const { jwtToken } = useSelector((store) => store.loginSlice);
+  const { fetchData, postData } = useApiData();
+  const [message, setMessage] = useState({ errorMsg: "", successMsg: "" });
   const [formData, setFormData] = useState({
     oldJobID: "",
     jobID: "",
@@ -21,8 +34,6 @@ const EditPage = () => {
     address: "",
     engineer: "",
     moc: "",
-    inDate: format(new Date(), "dd/MM/yyyy"),
-    outDate: format(addDays(new Date(), 2), "dd/MM/yyyy"),
     assets: "",
     productMake: "",
     serialNo: "",
@@ -34,49 +45,31 @@ const EditPage = () => {
     amount: "",
     purchaseAmount: "",
     purchasedStatus: "",
+    inDate: format(new Date(), "dd/MM/yyyy"),
+    outDate: format(new Date(), "dd/MM/yyyy"),
     engineerPicker: [],
     mocPicker: [],
     assetsPicker: [],
     productPicker: [],
     faultPicker: [],
     jobStatusPicker: [],
-    purchasedStatusPicker: [],
   });
-  const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
-
-  const navigate = useNavigate();
-  const location = useLocation();
-  const editJobID = new URLSearchParams(location.search).get("jobID");
-  const { name, jwtToken } = useSelector((store) => store.loginSlice);
 
   useEffect(() => {
     if (editJobID) {
-      setFormData((prev) => ({ ...prev, jobID: editJobID }));
       getJobDetails(editJobID);
-      getPickers();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getPickers();
   }, [editJobID]);
 
   const getJobDetails = async (jobID) => {
     try {
-      const response = await fetch(`${DATA_BY_JOB_ID_URL}?jobID=${jobID}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok)
-        throw new Error(`Failed to fetch job details: ${response.statusText}`);
-
-      const data = await response.json();
-
+      const data = await fetchData(
+        `${DATA_BY_JOB_ID_URL}?jobID=${jobID}`,
+        jwtToken,
+      );
       const [inDay, inMonth, inYear] = data[0].IN_DATE.split("-").map(Number);
       const inDate = new Date(inYear, inMonth - 1, inDay);
-
       const [outDay, outMonth, outYear] =
         data[0].OUT_DATE.split("-").map(Number);
       const outDate = new Date(outYear, outMonth - 1, outDay);
@@ -105,106 +98,71 @@ const EditPage = () => {
         outDate: format(outDate, "dd/MM/yyyy"),
       });
     } catch (error) {
-      console.error("Error fetching job details:", error.message);
+      setMessage({ errorMsg: error.message, successMsg: "" });
     }
   };
 
   const getPickers = async () => {
     try {
-      const response = await fetch(PICKERS_URL, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      setFormData((prevData) => ({
-        ...prevData,
+      const data = await fetchData(PICKERS_URL, jwtToken);
+      setFormData((prev) => ({
+        ...prev,
         engineerPicker: data.engineers,
         mocPicker: data.moc,
         assetsPicker: data.assets_type,
         productPicker: data.products,
         faultPicker: data.faults,
         jobStatusPicker: data.job_status,
-        purchasedStatusPicker: ["YES", "NO"],
       }));
     } catch (error) {
-      console.error("Error fetching job ID:", error);
+      setMessage({ errorMsg: error.message, successMsg: "" });
     }
   };
 
-  const handleDateChange = useCallback((date, fieldName) => {
-    setFormData((prev) => ({
-      ...prev,
-      [fieldName]: format(date, "dd/MM/yyyy"),
-    }));
-  }, []);
-
-  const handleChange = useCallback((e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  }, []);
+  };
 
-  const onFormSubmit = async (actionType) => {
-    setErrorMsg("");
-    setSuccessMsg("");
-    let timeoutId;
+  const handleDateChange = (date, field) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: format(date, "dd/MM/yyyy"),
+    }));
+  };
 
+  const onFormSubmit = async (action) => {
+    setMessage({ errorMsg: "", successMsg: "" });
     try {
-      const sendData = {
-        ...formData,
-        name,
-      };
-      const response = await fetch(EDIT_JOB_URL, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(sendData),
-      });
+      const response = await postData(EDIT_JOB_URL, formData, jwtToken);
+      setMessage({ errorMsg: "", successMsg: response.message });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccessMsg(data.message);
-
-        timeoutId = setTimeout(() => {
-          if (actionType === "saveAndPdf") {
-            navigate(`/printPage?jobID=${formData.jobID}`);
-          } else if (actionType !== "saveAndPdf") {
-            navigate(`/allJobs`);
-          }
-        }, 2000); // 2 seconds
+      if (action === "saveAndPdf") {
+        const trimmedJobID = formData.jobID.trim();
+        navigate(`/printPage?jobID=${trimmedJobID}`);
       } else {
-        setErrorMsg(data.error);
+        navigate("/allJobs");
       }
     } catch (error) {
-      setErrorMsg(`Error submitting data: ${error.message}`);
+      setMessage({ errorMsg: error.message, successMsg: "" });
     }
-
-    // Clear any previous timeout when the component unmounts or a new submission occurs
-    return () => clearTimeout(timeoutId);
   };
 
   return (
     <div className="flex-1 overflow-auto p-4">
-      {errorMsg && (
-        <p className="mb-1 text-lg font-bold text-red-600">{errorMsg}</p>
+      {message.errorMsg && (
+        <div className="mb-4 rounded-lg bg-red-100 p-4 text-red-700">
+          {message.errorMsg}
+        </div>
       )}
-      {successMsg && (
-        <p className="mb-1 text-lg font-bold text-green-600">{successMsg}</p>
+      {message.successMsg && (
+        <div className="mb-4 rounded-lg bg-green-100 p-4 text-green-700">
+          {message.successMsg}
+        </div>
       )}
       <form onSubmit={(e) => e.preventDefault()}>
-        <div className="flex flex-col lg:flex-row">
-          <div className="w-full lg:w-1/2">
+        <div className="flex flex-col lg:flex-row lg:space-x-8">
+          <div className="w-full rounded-lg border-2 border-[#1a365d] p-4 lg:w-1/2">
             <SectionHeader title="CUSTOMER DETAILS" />
             <InputField
               labelName="Job ID"
@@ -258,27 +216,35 @@ const EditPage = () => {
             />
 
             <div className="my-3 flex w-full items-center">
-              <label className="mr-2 w-4/12 text-xl font-bold">In Date</label>
-              <DatePicker
-                selected={parse(formData.inDate, "dd/MM/yyyy", new Date())}
-                onChange={(date) => handleDateChange(date, "inDate")}
-                dateFormat="dd/MM/yyyy"
-                showYearDropdown
-                className="flex-1 rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0"
-                placeholderText="Select In Date"
-              />
+              <label className="mr-2 w-1/3 text-xl font-bold text-[#1a365d]">
+                In Date
+              </label>
+              <div className="w-2/3">
+                <DatePicker
+                  selected={parse(formData.inDate, "dd/MM/yyyy", new Date())}
+                  onChange={(date) => handleDateChange(date, "inDate")}
+                  dateFormat="dd/MM/yyyy"
+                  showYearDropdown
+                  className="w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0"
+                  placeholderText="Select In Date"
+                />
+              </div>
             </div>
 
             <div className="my-3 flex w-full items-center">
-              <label className="mr-2 w-4/12 text-xl font-bold">Out Date</label>
-              <DatePicker
-                selected={parse(formData.outDate, "dd/MM/yyyy", new Date())}
-                onChange={(date) => handleDateChange(date, "outDate")}
-                dateFormat="dd/MM/yyyy"
-                showYearDropdown
-                className="flex-1 rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0"
-                placeholderText="Select Out Date"
-              />
+              <label className="mr-2 w-1/3 text-xl font-bold text-[#1a365d]">
+                Out Date
+              </label>
+              <div className="w-2/3">
+                <DatePicker
+                  selected={parse(formData.outDate, "dd/MM/yyyy", new Date())}
+                  onChange={(date) => handleDateChange(date, "outDate")}
+                  dateFormat="dd/MM/yyyy"
+                  showYearDropdown
+                  className="w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0"
+                  placeholderText="Select Out Date"
+                />
+              </div>
             </div>
 
             <TextareaField
@@ -290,28 +256,29 @@ const EditPage = () => {
               maxLength={1500}
             />
           </div>
-          <div className="w-full lg:ml-2 lg:w-1/2">
+
+          <div className="mt-8 w-full rounded-lg border-2 border-[#1a365d] p-4 lg:mt-0 lg:w-1/2">
             <SectionHeader title="PRODUCT DETAILS" />
             <SelectField
-              labelName="Asset Type"
+              labelName="Assets"
               name="assets"
               value={formData.assets}
               handleChange={handleChange}
               options={formData.assetsPicker}
             />
             <SelectField
-              labelName="Product Type"
+              labelName="Product Make"
               name="productMake"
               value={formData.productMake}
               handleChange={handleChange}
               options={formData.productPicker}
             />
             <InputField
-              labelName="Serial No"
+              labelName="Serial Number"
               name="serialNo"
               value={formData.serialNo}
               handleChange={handleChange}
-              placeholder="Serial No"
+              placeholder="Serial Number"
             />
             <TextareaField
               labelName="Description"
@@ -334,7 +301,7 @@ const EditPage = () => {
               value={formData.faultDesc}
               handleChange={handleChange}
               placeholder="Fault Description"
-              maxLength={1500}
+              maxLength={500}
             />
             <SelectField
               labelName="Job Status"
@@ -343,7 +310,6 @@ const EditPage = () => {
               handleChange={handleChange}
               options={formData.jobStatusPicker}
             />
-
             <InputField
               labelName="Amount"
               name="amount"
@@ -358,28 +324,26 @@ const EditPage = () => {
               handleChange={handleChange}
               placeholder="Enter Purchase Amount"
             />
-
             <SelectField
               labelName="Expense Status"
               name="purchasedStatus"
               value={formData.purchasedStatus}
               handleChange={handleChange}
-              options={formData.purchasedStatusPicker}
+              options={["YES", "NO"]}
             />
           </div>
         </div>
-        <div className="text-center">
+        <div className="mt-8 flex justify-center space-x-4">
           <button
             type="submit"
-            className="mr-8 w-[150px] rounded-lg bg-black py-2 font-bold text-white"
+            className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
             onClick={() => onFormSubmit("save")}
           >
             Save
           </button>
-
           <button
             type="submit"
-            className="w-[150px] rounded-lg bg-red-600 py-2 font-bold text-white"
+            className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
             onClick={() => onFormSubmit("saveAndPdf")}
           >
             Save & Print
@@ -391,34 +355,26 @@ const EditPage = () => {
 };
 
 const SectionHeader = ({ title }) => (
-  <h1 className="w-full bg-black p-2 text-xl font-bold text-white">{title}</h1>
+  <h1 className="w-full border-2 border-[#1a365d] bg-[#1a365d] p-2 text-xl font-bold text-white">
+    {title}
+  </h1>
 );
-
-SectionHeader.propTypes = {
-  title: PropTypes.string.isRequired,
-};
 
 const InputField = ({ labelName, name, value, handleChange, placeholder }) => (
   <div className="my-3 flex w-full items-center">
-    <label className="mr-2 w-4/12 text-xl font-bold">{labelName}</label>
+    <label className="mr-2 w-1/3 text-xl font-bold text-[#1a365d]">
+      {labelName}
+    </label>
     <input
       type="text"
       name={name}
       value={value}
       onChange={handleChange}
-      className="flex-1 rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0"
+      className="w-2/3 rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0"
       placeholder={placeholder}
     />
   </div>
 );
-
-InputField.propTypes = {
-  labelName: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.string.isRequired,
-};
 
 const TextareaField = ({
   labelName,
@@ -429,68 +385,50 @@ const TextareaField = ({
   maxLength,
 }) => (
   <div className="my-3 flex w-full items-center">
-    <label className="mr-2 w-4/12 text-xl font-bold">{labelName}</label>
+    <label className="mr-2 w-1/3 text-xl font-bold text-[#1a365d]">
+      {labelName}
+    </label>
     <textarea
       name={name}
       value={value}
       onChange={handleChange}
-      className="h-20 flex-1 resize-none rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0"
+      className="h-20 w-2/3 resize-none rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0"
       placeholder={placeholder}
       maxLength={maxLength}
     />
   </div>
 );
 
-TextareaField.propTypes = {
-  labelName: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.string.isRequired,
-  maxLength: PropTypes.number,
-};
-
 const SelectField = ({
   labelName,
   name,
   value,
   handleChange,
-  options = [], // Default to an empty array if `options` is not provided
-}) => {
-  // Ensure options is always an array
-  const validOptions = Array.isArray(options) ? options : [];
-
-  return (
-    <div className="my-3 flex w-full items-center">
-      <label className="mr-2 w-4/12 text-xl font-bold">{labelName}</label>
-      <select
-        name={name}
-        value={value}
-        onChange={handleChange}
-        className="flex-1 rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0"
-      >
-        {validOptions.length > 0 ? (
-          validOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))
-        ) : (
-          <option value="" disabled>
-            No options available
+  options = [],
+}) => (
+  <div className="my-3 flex w-full items-center">
+    <label className="mr-2 w-1/3 text-xl font-bold text-[#1a365d]">
+      {labelName}
+    </label>
+    <select
+      name={name}
+      value={value}
+      onChange={handleChange}
+      className="w-2/3 rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0"
+    >
+      {options.length > 0 ? (
+        options.map((option) => (
+          <option key={option} value={option}>
+            {option}
           </option>
-        )}
-      </select>
-    </div>
-  );
-};
-
-SelectField.propTypes = {
-  labelName: PropTypes.string.isRequired, // Label for the field
-  name: PropTypes.string.isRequired, // Name of the select input
-  value: PropTypes.string.isRequired, // Selected value
-  handleChange: PropTypes.func.isRequired, // Change handler for select input
-  options: PropTypes.arrayOf(PropTypes.string), // List of options (array of strings)
-};
+        ))
+      ) : (
+        <option value="" disabled>
+          No options available
+        </option>
+      )}
+    </select>
+  </div>
+);
 
 export default EditPage;

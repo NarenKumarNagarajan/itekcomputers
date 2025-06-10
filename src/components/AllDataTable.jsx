@@ -15,8 +15,6 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
   const [filterData, setFilterData] = useState(allData);
   const [selectedJobID, setSelectedJobID] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
-  const [jobToDelete, setJobToDelete] = useState(null);
 
   const navigate = useNavigate();
 
@@ -24,7 +22,7 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
 
   const handleView = (jobID) => {
     setSelectedJobID(jobID);
-    setIsPopupOpen(true);
+    openPopup(jobID);
   };
 
   const handleEdit = (jobID) => {
@@ -32,25 +30,12 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
   };
 
   const handleDelete = (jobID) => {
-    setJobToDelete(jobID);
-    setIsDeletePopupOpen(true);
+    openDeletePopup(jobID);
   };
 
   const closePopup = () => {
     setIsPopupOpen(false);
     setSelectedJobID(null);
-  };
-
-  const closeDeletePopup = () => {
-    setIsDeletePopupOpen(false);
-    setJobToDelete(null);
-  };
-
-  const confirmDelete = async () => {
-    if (jobToDelete) {
-      await openDeletePopup(jobToDelete);
-      closeDeletePopup();
-    }
   };
 
   const handleFilterDataInput = (e) => {
@@ -170,30 +155,6 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
           closePopup={closePopup}
           isPopupOpen={isPopupOpen}
         />
-      )}
-      {isDeletePopupOpen && (
-        <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
-          <div className="w-[400px] rounded-lg bg-white p-6 shadow-lg">
-            <h2 className="mb-4 text-center text-xl font-bold">Delete Job</h2>
-            <p className="mb-6 text-center">
-              Are you sure you want to delete this job?
-            </p>
-            <div className="flex justify-center space-x-4">
-              <button
-                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
-                onClick={confirmDelete}
-              >
-                Delete
-              </button>
-              <button
-                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
-                onClick={closeDeletePopup}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
       )}
     </div>
   );

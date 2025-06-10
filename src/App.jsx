@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 import { Suspense, lazy } from "react";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import appStore from "./redux/appStore";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import LoadingSpinner from "./components/common/LoadingSpinner";
@@ -28,6 +28,8 @@ import UserList from "./components/UserList";
 import Insights from "./components/Insights";
 import ModifyOptions from "./components/ModifyOptions";
 import CustomerDetails from "./components/CustomerDetails";
+import useVerifyLogin from "./hooks/useVerifyLogin";
+import { LOGIN_URL } from "./utils/globalConstants";
 
 const Layout = ({ children }) => {
   const hasCookie = Cookies.get("userCookie");
@@ -78,89 +80,116 @@ const UserListComponent = lazy(() => import("./components/UserList"));
 const InsightsComponent = lazy(() => import("./components/Insights"));
 
 const App = () => {
+  const { isLoggedIn } = useSelector((store) => store.loginSlice);
+
   return (
     <Provider store={appStore}>
       <ErrorBoundary>
         <Router>
-          <Suspense
-            fallback={
-              <div className="flex h-screen items-center justify-center bg-[#1a365d]">
-                <LoadingSpinner size="large" />
-              </div>
-            }
-          >
-            <Routes>
-              <Route path="/" element={<LoginComponent />} />
-              <Route
-                path="/allJobs"
-                element={
-                  <Layout>
-                    <AllJobsComponent />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/jobSheet"
-                element={
-                  <Layout>
-                    <JobSheetComponent />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/changePassword"
-                element={
-                  <Layout>
-                    <ChangePasswordComponent />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/modifyOptions"
-                element={
-                  <Layout>
-                    <ModifyOptionsComponent />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/customerDetail"
-                element={
-                  <Layout>
-                    <CustomerDetailsComponent />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/createUser"
-                element={
-                  <Layout>
-                    <CreateUserComponent />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/userList"
-                element={
-                  <Layout>
-                    <UserListComponent />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/insightsOverview"
-                element={
-                  <Layout>
-                    <InsightsComponent />
-                  </Layout>
-                }
-              />
-              <Route path="*" element={<ErrorPage />} />
-            </Routes>
-          </Suspense>
+          <AppContent />
         </Router>
       </ErrorBoundary>
     </Provider>
+  );
+};
+
+const AppContent = () => {
+  const { isLoggedIn } = useSelector((store) => store.loginSlice);
+  useVerifyLogin("/allJobs");
+
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-screen items-center justify-center bg-[#1a365d]">
+          <LoadingSpinner size="large" />
+        </div>
+      }
+    >
+      <Routes>
+        <Route path="/" element={<LoginComponent />} />
+        <Route
+          path="/allJobs"
+          element={
+            <Layout>
+              <AllJobsComponent />
+            </Layout>
+          }
+        />
+        <Route
+          path="/jobSheet"
+          element={
+            <Layout>
+              <JobSheetComponent />
+            </Layout>
+          }
+        />
+        <Route
+          path="/changePassword"
+          element={
+            <Layout>
+              <ChangePasswordComponent />
+            </Layout>
+          }
+        />
+        <Route
+          path="/modifyOptions"
+          element={
+            <Layout>
+              <ModifyOptionsComponent />
+            </Layout>
+          }
+        />
+        <Route
+          path="/customerDetail"
+          element={
+            <Layout>
+              <CustomerDetailsComponent />
+            </Layout>
+          }
+        />
+        <Route
+          path="/createUser"
+          element={
+            <Layout>
+              <CreateUserComponent />
+            </Layout>
+          }
+        />
+        <Route
+          path="/userList"
+          element={
+            <Layout>
+              <UserListComponent />
+            </Layout>
+          }
+        />
+        <Route
+          path="/insightsOverview"
+          element={
+            <Layout>
+              <InsightsComponent />
+            </Layout>
+          }
+        />
+        <Route
+          path="/editJob"
+          element={
+            <Layout>
+              <EditPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/printPage"
+          element={
+            <Layout>
+              <PrintPage />
+            </Layout>
+          }
+        />
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
+    </Suspense>
   );
 };
 

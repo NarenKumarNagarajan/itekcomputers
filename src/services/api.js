@@ -62,4 +62,29 @@ export const api = {
       throw new ApiError(error.message || "Failed to fetch data", error.status);
     }
   },
+
+  get: async (url, token) => {
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: getHeaders(token),
+      });
+      return handleResponse(response);
+    } catch (error) {
+      throw new ApiError(error.message || "Failed to fetch data", error.status);
+    }
+  },
+
+  post: async (url, data, token) => {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: getHeaders(token),
+        body: JSON.stringify(data),
+      });
+      return handleResponse(response);
+    } catch (error) {
+      throw new ApiError(error.message || "Failed to post data", error.status);
+    }
+  },
 };

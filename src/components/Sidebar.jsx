@@ -39,17 +39,25 @@ const Sidebar = () => {
       activeMenu === menuItem.title.toLowerCase().replace(" ", "");
     return (
       <div key={menuItem.title} className="bg-[#1a365d]">
-        <Link to={menuItem.link}>
-          <li
-            className={`p-3 hover:bg-[#ffffff] hover:text-[#1a365d] ${
-              isActive
-                ? "bg-[#ffffff] text-[#1a365d]"
-                : "bg-[#1a365d] text-[#ffffff]"
-            }`}
-            onClick={() => handleMenuClick(menuItem)}
+        <Link
+          to={menuItem.link}
+          className={`flex items-center gap-2 rounded-lg px-4 py-2 text-white transition-colors ${
+            location.pathname === menuItem.link
+              ? "border-r-4 border-l-4 border-[#1a365d] bg-white text-[#1a365d]"
+              : "hover:border-r-4 hover:border-l-4 hover:border-[#1a365d] hover:bg-white hover:text-[#1a365d]"
+          }`}
+          onClick={() => handleMenuClick(menuItem)}
+        >
+          {menuItem.icon}
+          <span
+            className={
+              location.pathname === menuItem.link
+                ? "text-[#1a365d]"
+                : "group-hover:text-[#1a365d]"
+            }
           >
             {menuItem.title}
-          </li>
+          </span>
         </Link>
       </div>
     );

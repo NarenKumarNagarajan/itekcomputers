@@ -5,7 +5,7 @@ export const useApiData = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchData = useCallback(async (endpoint, token, options = {}) => {
+  const fetchData = useCallback(async (endpoint, token) => {
     setLoading(true);
     setError(null);
     try {

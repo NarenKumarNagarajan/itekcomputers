@@ -12,6 +12,9 @@ import {
   DATE_FILTERS,
   DEFAULT_STATUS,
   DEFAULT_DATE_FILTER,
+  BUTTON_BASE_STYLE,
+  BUTTON_SIZES,
+  BUTTON_COLORS,
 } from "../utils/globalConstants";
 import { getDateRange } from "../utils/helperFunc";
 import JobDetailPopUp from "./JobDetailPopUp";
@@ -32,6 +35,7 @@ const AllJobs = () => {
   const [selectedJobID, setSelectedJobID] = useState(null);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [message, setMessage] = useState({ errorMsg: "", successMsg: "" });
+  const [jobToDelete, setJobToDelete] = useState(null);
 
   const { jwtToken, position } = useSelector((store) => store.loginSlice);
 
@@ -124,18 +128,16 @@ const AllJobs = () => {
   };
 
   const openDeletePopup = (jobID) => {
-    setSelectedJobID(jobID);
+    setJobToDelete(jobID);
     setIsDeletePopupOpen(true);
   };
 
   const closeDeletePopup = () => {
     setIsDeletePopupOpen(false);
-    setSelectedJobID(null);
+    setJobToDelete(null);
   };
 
-  const handleDelete = async (JobID) => {
-    setIsDeletePopupOpen(false);
-
+  const handleDelete = async (jobID) => {
     try {
       const response = await fetch(DELETE_JOB_URL, {
         method: "POST",
@@ -143,32 +145,51 @@ const AllJobs = () => {
           Authorization: `Bearer ${jwtToken}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ JobID, position }),
+        body: JSON.stringify({ JobID: jobID, position }),
       });
 
-      const result = await response.json();
-      if (response.ok) {
-        setMessage({ errorMsg: "", successMsg: `${result.message}` });
-        fetchJobDetails();
+      const data = await response.json();
+
+      if (response.status === 200) {
+        setAllData((prevData) =>
+          prevData.filter((item) => item.jobID !== jobID),
+        );
+        setMessage({ errorMsg: "", successMsg: "Job deleted successfully" });
+        closeDeletePopup();
       } else {
-        setMessage({ errorMsg: `Error: ${result.message}`, successMsg: "" });
+        setMessage({
+          errorMsg: data.message || "Failed to delete job",
+          successMsg: "",
+        });
+        closeDeletePopup();
       }
     } catch (error) {
-      setMessage({ errorMsg: `Error: ${error.message}`, successMsg: "" });
+      console.error("Error deleting job:", error);
+      setMessage({
+        errorMsg: "Error deleting job: " + error.message,
+        successMsg: "",
+      });
+      closeDeletePopup();
+    }
+  };
+
+  const confirmDelete = async () => {
+    if (jobToDelete) {
+      await handleDelete(jobToDelete);
     }
   };
 
   return (
-    <div className="flex-1 overflow-auto p-4">
+    <div className="container mx-auto p-4">
       {message.errorMsg && (
-        <p className="my-1 text-center text-lg font-bold text-red-600">
+        <div className="mb-4 rounded-lg bg-red-100 p-4 text-red-700">
           {message.errorMsg}
-        </p>
+        </div>
       )}
       {message.successMsg && (
-        <p className="my-1 text-center text-lg font-bold text-green-700">
+        <div className="mb-4 rounded-lg bg-green-100 p-4 text-green-700">
           {message.successMsg}
-        </p>
+        </div>
       )}
       <div className="flex w-full justify-center">
         <div className="flex w-full flex-col items-center lg:w-2/3">
@@ -287,19 +308,19 @@ const AllJobs = () => {
           }}
         >
           <div className="rounded-lg bg-white p-4 shadow-lg">
-            <div>
-              Do you want to delete user -{" "}
-              <span className="font-bold">{selectedJobID}</span> ?
-            </div>
-            <div className="mt-4 flex justify-center space-x-10">
+            <h2 className="mb-4 text-center text-xl font-bold">Delete Job</h2>
+            <p className="mb-6 text-center">
+              Are you sure you want to delete this job?
+            </p>
+            <div className="flex justify-center space-x-4">
               <button
-                className="flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-[#1a365d] px-3 py-1.5 text-sm font-bold text-white transition-colors hover:border-[#1a365d] hover:bg-white hover:text-[#1a365d]"
-                onClick={() => handleDelete(selectedJobID)}
+                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
+                onClick={confirmDelete}
               >
                 Delete
               </button>
               <button
-                className="flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-red-500 px-3 py-1.5 text-sm font-bold text-white transition-colors hover:border-red-500 hover:bg-white hover:text-red-500"
+                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
                 onClick={closeDeletePopup}
               >
                 Close

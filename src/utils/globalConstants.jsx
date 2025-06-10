@@ -137,8 +137,9 @@ export const BUTTON_COLORS = {
 };
 
 export const BUTTON_SIZES = {
-  SMALL: "w-[80px]",
-  MEDIUM: "w-[120px]",
+  SMALL: "w-[100px]",
+  MEDIUM: "w-[150px]",
+  LARGE: "w-[200px]",
 };
 
 // Table Headers

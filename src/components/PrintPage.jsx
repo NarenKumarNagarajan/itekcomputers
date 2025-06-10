@@ -7,7 +7,7 @@ import logo from "../images/logo.png";
 import { IoIosMail, IoIosCall } from "react-icons/io";
 import { BiWorld } from "react-icons/bi";
 import { DATA_BY_JOB_ID_URL } from "../utils/globalConstants";
-import { numberToWords } from "../utils/helperFunc";
+import { numberToWords } from "../utils/helperFunc.jsx";
 
 const PrintPage = () => {
   const [jobDetails, setJobDetails] = useState({});
@@ -19,9 +19,13 @@ const PrintPage = () => {
   const { jwtToken } = useSelector((store) => store.loginSlice);
 
   useEffect(() => {
+    if (!jobID) {
+      setErrorMsg("No Job ID provided");
+      return;
+    }
     getJobDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [jobID]);
 
   const getJobDetails = async () => {
     try {
@@ -48,6 +52,27 @@ const PrintPage = () => {
       }
     } catch (error) {
       console.error("Error fetching job details:", error.message);
+      setErrorMsg("Error fetching job details");
+    }
+  };
+
+  const formatAmount = (amount) => {
+    try {
+      if (!amount || amount === 0) return "-";
+      return `Rs. ${amount}`;
+    } catch (error) {
+      console.error("Error formatting amount:", error);
+      return "-";
+    }
+  };
+
+  const formatAmountInWords = (amount) => {
+    try {
+      if (!amount || amount === 0) return "-";
+      return `(${numberToWords(parseInt(amount, 10))} Only)`;
+    } catch (error) {
+      console.error("Error formatting amount in words:", error);
+      return "-";
     }
   };
 
@@ -57,7 +82,7 @@ const PrintPage = () => {
         {errorMsg && (
           <div className="text-xl font-bold text-red-600">{errorMsg}</div>
         )}
-        {jobDetails && (
+        {jobDetails && Object.keys(jobDetails).length > 0 && (
           <div className="bg-white px-6 py-12" ref={componentRef}>
             <div className="border-2 border-black">
               <div className="flex items-center border-b-2 border-black">
@@ -94,7 +119,7 @@ const PrintPage = () => {
               <div className="flex items-center justify-between border-b-2 border-black px-6">
                 <div className="w-1/2 border-r-2 border-black text-left">
                   <p className="flex">
-                    <span className="w-[100px] border-r-2 border-black py-1 font-courier text-lg font-bold">
+                    <span className="font-courier w-[100px] border-r-2 border-black py-1 text-lg font-bold">
                       Job No
                     </span>
                     <span className="flex-grow border-b-2 border-black py-1 pl-2">
@@ -102,7 +127,7 @@ const PrintPage = () => {
                     </span>
                   </p>
                   <p className="flex">
-                    <span className="w-[100px] border-r-2 border-black py-1 font-courier text-lg font-bold">
+                    <span className="font-courier w-[100px] border-r-2 border-black py-1 text-lg font-bold">
                       Engineer
                     </span>
                     <span className="py-1 pl-2">{jobDetails.ENGINEER}</span>
@@ -132,19 +157,19 @@ const PrintPage = () => {
               <div className="flex items-start justify-between border-b-2 border-black px-6 text-left">
                 <div className="w-1/2 border-r-2 border-black">
                   <p className="flex">
-                    <span className="w-[100px] border-r-2 border-black py-1 font-courier text-lg font-bold">
+                    <span className="font-courier w-[100px] border-r-2 border-black py-1 text-lg font-bold">
                       Name
                     </span>
                     <span className="py-1 pl-2">{jobDetails.NAME}</span>
                   </p>
                   <p className="flex">
-                    <span className="w-[100px] border-r-2 border-black pb-1 font-courier text-lg font-bold">
+                    <span className="font-courier w-[100px] border-r-2 border-black pb-1 text-lg font-bold">
                       Mobile
                     </span>
                     <span className="pb-1 pl-2">{jobDetails.MOBILE}</span>
                   </p>
                   <p className="flex">
-                    <span className="w-[100px] border-r-2 border-black pb-1 font-courier text-lg font-bold">
+                    <span className="font-courier w-[100px] border-r-2 border-black pb-1 text-lg font-bold">
                       Email
                     </span>
                     <span className="pb-1 pl-2">{jobDetails.EMAIL}</span>
@@ -163,31 +188,31 @@ const PrintPage = () => {
               <div className="flex h-full items-stretch justify-between border-b-2 border-black text-left">
                 <div className="flex min-h-full w-1/2 flex-col border-r-2 border-black px-6">
                   <p className="flex">
-                    <span className="min-h-full w-[150px] border-r-2 border-black py-1 font-courier text-lg font-bold">
+                    <span className="font-courier min-h-full w-[150px] border-r-2 border-black py-1 text-lg font-bold">
                       Asset Type
                     </span>
                     <span className="py-1 pl-2">{jobDetails.ASSETS}</span>
                   </p>
                   <p className="flex">
-                    <span className="w-[150px] border-r-2 border-black pb-1 font-courier text-lg font-bold">
+                    <span className="font-courier w-[150px] border-r-2 border-black pb-1 text-lg font-bold">
                       Product Type
                     </span>
                     <span className="pb-1 pl-2">{jobDetails.PRODUCT_MAKE}</span>
                   </p>
                   <p className="flex">
-                    <span className="w-[150px] border-r-2 border-black pb-1 font-courier text-lg font-bold">
+                    <span className="font-courier w-[150px] border-r-2 border-black pb-1 text-lg font-bold">
                       Serial No
                     </span>
                     <span className="pb-1 pl-2">{jobDetails.SERIAL_NO}</span>
                   </p>
                   <p className="flex">
-                    <span className="w-[150px] border-r-2 border-black pb-1 font-courier text-lg font-bold">
+                    <span className="font-courier w-[150px] border-r-2 border-black pb-1 text-lg font-bold">
                       Description
                     </span>
                     <span className="pb-1 pl-2">{jobDetails.DESCRIPTION}</span>
                   </p>
                   <p className="flex flex-grow">
-                    <span className="w-[150px] border-r-2 border-black pb-1 font-courier text-lg font-bold">
+                    <span className="font-courier w-[150px] border-r-2 border-black pb-1 text-lg font-bold">
                       Job Status
                     </span>
                     <span className="pb-1 pl-2">{jobDetails.JOB_STATUS}</span>
@@ -200,7 +225,7 @@ const PrintPage = () => {
                     </span>{" "}
                     {jobDetails.FAULT_TYPE}
                   </p>
-                  <h1 className="px-2 pt-1 font-courier text-lg font-bold">
+                  <h1 className="font-courier px-2 pt-1 text-lg font-bold">
                     Fault Description:
                   </h1>
                   <p className="px-2 pb-1 text-justify">
@@ -218,23 +243,19 @@ const PrintPage = () => {
 
               <div className="border-b-2 border-black px-6">
                 <p className="flex font-bold">
-                  <span className="w-[130px] border-r-2 border-black py-1 font-courier text-lg">
+                  <span className="font-courier w-[130px] border-r-2 border-black py-1 text-lg">
                     AMOUNT
                   </span>
                   <span className="py-1 pl-2">
-                    {jobDetails.AMOUNT === 0 ? "-" : `Rs. ${jobDetails.AMOUNT}`}
+                    {formatAmount(jobDetails.AMOUNT)}
                   </span>
                 </p>
                 <p className="flex">
-                  <span className="w-[130px] border-r-2 border-black py-1 font-courier text-lg font-bold">
+                  <span className="font-courier w-[130px] border-r-2 border-black py-1 text-lg font-bold">
                     (in words)
                   </span>
                   <span className="py-1 pl-2">
-                    {jobDetails.AMOUNT === 0
-                      ? "-"
-                      : `(${numberToWords(
-                          parseInt(jobDetails.AMOUNT, 10),
-                        )} Only)`}
+                    {formatAmountInWords(jobDetails.AMOUNT)}
                   </span>
                 </p>
               </div>
