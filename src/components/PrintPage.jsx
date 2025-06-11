@@ -1,18 +1,24 @@
 import { useEffect, useState, useRef } from "react";
-import { useLocation } from "react-router-dom";
-import ReactToPrint from "react-to-print";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import {
+  BUTTON_BASE_STYLE,
+  BUTTON_SIZES,
+  BUTTON_COLORS,
+} from "../utils/globalConstants";
 
 import logo from "../images/logo.png";
 import { IoIosMail, IoIosCall } from "react-icons/io";
 import { BiWorld } from "react-icons/bi";
 import { DATA_BY_JOB_ID_URL } from "../utils/globalConstants";
-import { numberToWords } from "../utils/helperFunc.jsx";
+import { numberToWords } from "../utils/helperFunc";
 
 const PrintPage = () => {
   const [jobDetails, setJobDetails] = useState({});
   const [errorMsg, setErrorMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const jobID = queryParams.get("jobID");
   const componentRef = useRef();
@@ -27,7 +33,21 @@ const PrintPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jobID]);
 
+  // Handle window focus to ensure buttons work after print dialog
+  useEffect(() => {
+    const handleFocus = () => {
+      // Force a re-render when window regains focus
+      setJobDetails((prev) => ({ ...prev }));
+    };
+
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, []);
+
   const getJobDetails = async () => {
+    if (isLoading) return;
+
+    setIsLoading(true);
     try {
       const response = await fetch(`${DATA_BY_JOB_ID_URL}?jobID=${jobID}`, {
         method: "GET",
@@ -53,28 +73,42 @@ const PrintPage = () => {
     } catch (error) {
       console.error("Error fetching job details:", error.message);
       setErrorMsg("Error fetching job details");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const formatAmount = (amount) => {
-    try {
-      if (!amount || amount === 0) return "-";
-      return `Rs. ${amount}`;
-    } catch (error) {
-      console.error("Error formatting amount:", error);
-      return "-";
-    }
+  const handlePrint = () => {
+    const printContent = componentRef.current.innerHTML;
+    const originalContent = document.body.innerHTML;
+
+    document.body.innerHTML = `
+      <div class="print-content">
+        ${printContent}
+      </div>
+    `;
+
+    window.print();
+
+    // Restore the original content after a short delay
+    setTimeout(() => {
+      document.body.innerHTML = originalContent;
+      // Re-attach event listeners
+      window.location.reload();
+    }, 100);
   };
 
-  const formatAmountInWords = (amount) => {
-    try {
-      if (!amount || amount === 0) return "-";
-      return `(${numberToWords(parseInt(amount, 10))} Only)`;
-    } catch (error) {
-      console.error("Error formatting amount in words:", error);
-      return "-";
-    }
+  const handleBack = () => {
+    navigate(-1);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-xl">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 overflow-auto p-4">
@@ -82,15 +116,13 @@ const PrintPage = () => {
         {errorMsg && (
           <div className="text-xl font-bold text-red-600">{errorMsg}</div>
         )}
-        {jobDetails && Object.keys(jobDetails).length > 0 && (
-          <div className="bg-white px-6 py-12" ref={componentRef}>
+        {jobDetails && (
+          <div className="bg-white p-1" ref={componentRef}>
             <div className="border-2 border-black">
               <div className="flex items-center border-b-2 border-black">
-                <img
-                  src={logo}
-                  alt="logo"
-                  className="w-2/6 border-r-2 border-black p-4"
-                />
+                <div className="m-2 flex justify-center">
+                  <img src={logo} alt="iTek Logo" className="h-18 w-40" />
+                </div>
 
                 <div className="ml-5 flex-1 text-center">
                   <h1 className="font-bold">LAPTOP | DESKTOP | CCTV</h1>
@@ -247,7 +279,7 @@ const PrintPage = () => {
                     AMOUNT
                   </span>
                   <span className="py-1 pl-2">
-                    {formatAmount(jobDetails.AMOUNT)}
+                    {jobDetails.AMOUNT === 0 ? "-" : `Rs. ${jobDetails.AMOUNT}`}
                   </span>
                 </p>
                 <p className="flex">
@@ -255,7 +287,11 @@ const PrintPage = () => {
                     (in words)
                   </span>
                   <span className="py-1 pl-2">
-                    {formatAmountInWords(jobDetails.AMOUNT)}
+                    {jobDetails.AMOUNT === 0
+                      ? "-"
+                      : `(${numberToWords(
+                          parseInt(jobDetails.AMOUNT, 10),
+                        )} Only)`}
                   </span>
                 </p>
               </div>
@@ -282,16 +318,20 @@ const PrintPage = () => {
           </div>
         )}
       </div>
-      <ReactToPrint
-        trigger={() => (
-          <center>
-            <button className="my-5 rounded-lg bg-black px-3 py-2 text-white">
-              Print
-            </button>
-          </center>
-        )}
-        content={() => componentRef.current}
-      />
+      <div className="mt-4 flex justify-center gap-4">
+        <button
+          onClick={handlePrint}
+          className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
+        >
+          Print
+        </button>
+        <button
+          onClick={handleBack}
+          className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+        >
+          Back
+        </button>
+      </div>
     </div>
   );
 };

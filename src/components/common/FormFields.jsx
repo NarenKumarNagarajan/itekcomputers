@@ -13,21 +13,23 @@ export const TextareaField = ({
   className = "",
 }) => {
   return (
-    <div className="mb-4">
-      <label className="mb-2 block text-sm font-bold text-gray-700">
+    <div className="my-3 flex w-full items-center">
+      <label className="mr-2 w-1/3 text-xl font-bold text-[#1a365d]">
         {label}
       </label>
-      <textarea
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        maxLength={maxLength}
-        className={`focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none ${
-          error ? "border-red-500" : ""
-        } ${className}`}
-      />
-      {error && <p className="text-xs text-red-500 italic">{error}</p>}
+      <div className="w-2/3">
+        <textarea
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          maxLength={maxLength}
+          className={`h-20 w-full resize-none rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${
+            error ? "border-red-500" : ""
+          } ${className}`}
+        />
+        {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+      </div>
     </div>
   );
 };
@@ -42,25 +44,27 @@ export const SelectField = ({
   className = "",
 }) => {
   return (
-    <div className="mb-4">
-      <label className="mb-2 block text-sm font-bold text-gray-700">
+    <div className="my-3 flex w-full items-center">
+      <label className="mr-2 w-1/3 text-xl font-bold text-[#1a365d]">
         {label}
       </label>
-      <select
-        name={name}
-        value={value}
-        onChange={onChange}
-        className={`focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none ${
-          error ? "border-red-500" : ""
-        } ${className}`}
-      >
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-      {error && <p className="text-xs text-red-500 italic">{error}</p>}
+      <div className="w-2/3">
+        <select
+          name={name}
+          value={value}
+          onChange={onChange}
+          className={`w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${
+            error ? "border-red-500" : ""
+          } ${className}`}
+        >
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+        {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+      </div>
     </div>
   );
 };
@@ -74,21 +78,23 @@ export const DatePickerField = ({
   className = "",
 }) => {
   return (
-    <div className="mb-4">
-      <label className="mb-2 block text-sm font-bold text-gray-700">
+    <div className="my-3 flex w-full items-center">
+      <label className="mr-2 w-1/3 text-xl font-bold text-[#1a365d]">
         {label}
       </label>
-      <DatePicker
-        selected={selected}
-        onChange={onChange}
-        dateFormat="dd/MM/yyyy"
-        showYearDropdown
-        className={`focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none ${
-          error ? "border-red-500" : ""
-        } ${className}`}
-        placeholderText={placeholder}
-      />
-      {error && <p className="text-xs text-red-500 italic">{error}</p>}
+      <div className="w-2/3">
+        <DatePicker
+          selected={selected}
+          onChange={onChange}
+          dateFormat="dd/MM/yyyy"
+          showYearDropdown
+          className={`w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${
+            error ? "border-red-500" : ""
+          } ${className}`}
+          placeholderText={placeholder}
+        />
+        {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+      </div>
     </div>
   );
 };

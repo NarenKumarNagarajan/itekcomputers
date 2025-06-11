@@ -149,7 +149,7 @@ const EditPage = () => {
   };
 
   return (
-    <div className="flex-1 overflow-auto p-4">
+    <div className="container mx-auto p-4">
       {message.errorMsg && (
         <div className="mb-4 rounded-lg bg-red-100 p-4 text-red-700">
           {message.errorMsg}
@@ -161,7 +161,7 @@ const EditPage = () => {
         </div>
       )}
       <form onSubmit={(e) => e.preventDefault()}>
-        <div className="flex flex-col lg:flex-row lg:space-x-8">
+        <div className="flex flex-col lg:flex-row">
           <div className="w-full rounded-lg border-2 border-[#1a365d] p-4 lg:w-1/2">
             <SectionHeader title="CUSTOMER DETAILS" />
             <InputField

@@ -78,6 +78,7 @@ const CustomerDetailsComponent = lazy(
 const CreateUserComponent = lazy(() => import("./components/CreateUser"));
 const UserListComponent = lazy(() => import("./components/UserList"));
 const InsightsComponent = lazy(() => import("./components/Insights"));
+const PrintPageComponent = lazy(() => import("./components/PrintPage"));
 
 const App = () => {
   const { isLoggedIn } = useSelector((store) => store.loginSlice);
@@ -183,7 +184,7 @@ const AppContent = () => {
           path="/printPage"
           element={
             <Layout>
-              <PrintPage />
+              <PrintPageComponent />
             </Layout>
           }
         />

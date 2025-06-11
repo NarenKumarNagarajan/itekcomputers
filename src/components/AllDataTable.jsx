@@ -42,6 +42,33 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
     setSearch(e.target.value);
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Service Pending":
+        return "bg-red-200";
+      case "Completed":
+        return "bg-green-200";
+      case "Approval Pending":
+        return "bg-yellow-200";
+      case "Chiplevel Pending":
+        return "bg-orange-200";
+      case "Delivery Pending":
+        return "bg-blue-200";
+      case "Cash Pending":
+        return "bg-purple-200";
+      case "Return Pending":
+        return "bg-pink-200";
+      case "Warranty Service":
+        return "bg-indigo-200";
+      case "Returned":
+        return "bg-gray-200";
+      case "In Progress":
+        return "bg-cyan-200";
+      default:
+        return "";
+    }
+  };
+
   useEffect(() => {
     const filtered = allData.filter(
       (row) =>
@@ -53,7 +80,7 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
   }, [search, allData]);
 
   return (
-    <div className="mt-3 overflow-x-auto">
+    <div className="container mx-auto p-4">
       <input
         type="text"
         placeholder="Search..."
@@ -61,94 +88,95 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
         onChange={handleFilterDataInput}
         className="mb-2 w-full rounded-lg border-2 border-slate-400 p-2 focus:outline-0 lg:w-1/3"
       />
-      <table className="w-full border-collapse overflow-auto border-2 border-[#ddd]">
-        <thead>
-          <tr className="bg-[#1a365d] text-white">
-            {TABLE_HEADERS.ALL_DATA_TABLE.map((header) => (
-              <th
-                key={header}
-                className="border border-gray-300 px-2 py-1 text-center whitespace-nowrap"
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {filterData.length > 0 ? (
-            filterData.map((row, index) => (
-              <tr
-                key={row.newID}
-                className={`hover:bg-gray-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-100"}`}
-              >
-                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
-                  {row.newID}
-                </td>
-                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
-                  {row.JOB_ID}
-                </td>
-                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
-                  {row.NAME}
-                </td>
-                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
-                  {row.MOBILE}
-                </td>
-                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
-                  {row.IN_DATE}
-                </td>
-                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
-                  {row.OUT_DATE}
-                </td>
-                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
-                  {row.ASSETS}
-                </td>
-                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
-                  {row.JOB_STATUS}
-                </td>
-                <td className="flex-wrap border border-gray-300 px-2 py-1">
-                  {row.SOLUTION_PROVIDED}
-                </td>
-                <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
-                  {row.AMOUNT}
-                </td>
-                <td className="border border-gray-300 px-2 py-1 text-center whitespace-nowrap">
-                  <div className="flex justify-center gap-4">
-                    <button
-                      className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
-                      onClick={() => handleView(row.JOB_ID)}
-                    >
-                      View
-                    </button>
-                    <button
-                      className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
-                      onClick={() => handleEdit(row.JOB_ID)}
-                    >
-                      Edit
-                    </button>
-                    {position === "ADMIN" && (
+      <div className="overflow-x-auto">
+        <table className="min-w-full border-collapse border border-white">
+          <thead>
+            <tr className="bg-[#1a365d] text-white">
+              {TABLE_HEADERS.ALL_DATA_TABLE.map((header) => (
+                <th
+                  key={header}
+                  className="border border-white px-2 py-1 text-center whitespace-nowrap"
+                >
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filterData.length > 0 ? (
+              filterData.map((row, index) => (
+                <tr
+                  key={row.newID}
+                  className={`border border-white ${getStatusColor(row.JOB_STATUS)}`}
+                >
+                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                    {row.newID}
+                  </td>
+                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                    {row.NAME}
+                  </td>
+                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                    {row.MOBILE}
+                  </td>
+                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                    {row.IN_DATE}
+                  </td>
+                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                    {row.OUT_DATE}
+                  </td>
+                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                    {row.ASSETS}
+                  </td>
+                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                    {row.JOB_STATUS}
+                  </td>
+                  <td className="border border-white px-2 py-1">
+                    {row.SOLUTION_PROVIDED && row.SOLUTION_PROVIDED.length > 5
+                      ? `${row.SOLUTION_PROVIDED.substring(0, 5)}...`
+                      : row.SOLUTION_PROVIDED}
+                  </td>
+                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                    {row.AMOUNT}
+                  </td>
+                  <td className="border border-white px-2 py-1 text-center whitespace-nowrap">
+                    <div className="flex justify-center gap-4">
                       <button
-                        className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
-                        onClick={() => handleDelete(row.JOB_ID)}
+                        className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
+                        onClick={() => handleView(row.newID)}
                       >
-                        Delete
+                        View
                       </button>
-                    )}
-                  </div>
+                      <button
+                        className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
+                        onClick={() => handleEdit(row.newID)}
+                      >
+                        Edit
+                      </button>
+                      {position === "ADMIN" && (
+                        <button
+                          className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+                          onClick={() => handleDelete(row.newID)}
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={TABLE_HEADERS.ALL_DATA_TABLE.length}
+                  className="p-4 text-center"
+                >
+                  No data available
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td
-                colSpan={TABLE_HEADERS.ALL_DATA_TABLE.length}
-                className="p-4 text-center"
-              >
-                No data available
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
       {isPopupOpen && (
         <JobDetailPopUp
           selectedJobID={selectedJobID}

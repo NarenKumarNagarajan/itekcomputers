@@ -1,27 +1,19 @@
 import { LOGIN_URL, LOGOUT_URL, ALL_DATA_URL } from "../utils/globalConstants";
 
-class ApiError extends Error {
-  constructor(message, status) {
-    super(message);
-    this.status = status;
-  }
-}
-
-const handleResponse = async (response) => {
-  if (!response.ok) {
-    const error = await response.json();
-    throw new ApiError(
-      error.message || "Something went wrong",
-      response.status,
-    );
-  }
-  return response.json();
-};
-
 const getHeaders = (token) => ({
   "Content-Type": "application/json",
   ...(token && { Authorization: `Bearer ${token}` }),
 });
+
+const handleResponse = async (response) => {
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || "Something went wrong");
+  }
+  return response.json();
+};
+
+const BASE_URL = "http://localhost:7000";
 
 export const api = {
   login: async (credentials) => {
@@ -33,20 +25,19 @@ export const api = {
       });
       return handleResponse(response);
     } catch (error) {
-      throw new ApiError(error.message || "Login failed", error.status);
+      throw new Error(error.message || "Login failed");
     }
   },
 
-  logout: async (userData, token) => {
+  logout: async (token) => {
     try {
       const response = await fetch(LOGOUT_URL, {
         method: "POST",
         headers: getHeaders(token),
-        body: JSON.stringify(userData),
       });
       return handleResponse(response);
     } catch (error) {
-      throw new ApiError(error.message || "Logout failed", error.status);
+      throw new Error(error.message || "Logout failed");
     }
   },
 
@@ -59,7 +50,7 @@ export const api = {
       });
       return handleResponse(response);
     } catch (error) {
-      throw new ApiError(error.message || "Failed to fetch data", error.status);
+      throw new Error(error.message || "Failed to fetch data");
     }
   },
 
@@ -71,7 +62,7 @@ export const api = {
       });
       return handleResponse(response);
     } catch (error) {
-      throw new ApiError(error.message || "Failed to fetch data", error.status);
+      throw new Error(error.message || "Failed to fetch data");
     }
   },
 
@@ -84,7 +75,7 @@ export const api = {
       });
       return handleResponse(response);
     } catch (error) {
-      throw new ApiError(error.message || "Failed to post data", error.status);
+      throw new Error(error.message || "Failed to submit data");
     }
   },
 };
