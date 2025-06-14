@@ -1,154 +1,211 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
-import { BiSolidHide, BiSolidShow } from "react-icons/bi";
-import { CHANGE_PWD_URL, CHANGE_TPWD_URL } from "../utils/globalConstants";
+import { useApi } from "../hooks/useApi";
+import { CHANGE_PWD_URL } from "../utils/globalConstants";
 
 const ChangePassword = () => {
-  const [passwords, setPasswords] = useState({
+  const navigate = useNavigate();
+  const { jwtToken, userName, userId, position } = useSelector(
+    (store) => store.loginSlice,
+  );
+  const { execute, loading } = useApi();
+  const [message, setMessage] = useState({ errorMsg: "", successMsg: "" });
+  const [formData, setFormData] = useState({
     oldPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
-  const [visibility, setVisibility] = useState({
-    oldPassword: false,
-    newPassword: false,
-    confirmPassword: false,
+  const [errors, setErrors] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
-  const [message, setMessage] = useState({ errorMsg: "", successMsg: "" });
 
-  const { position, jwtToken, userName, userId } = useSelector(
-    (store) => store.loginSlice,
-  );
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setPasswords({ ...passwords, [name]: value });
-  };
-
-  const handleVisibilityToggle = (field) => {
-    setVisibility((prev) => ({ ...prev, [field]: !prev[field] }));
-  };
-
-  const validatePasswords = () => {
-    const { oldPassword, newPassword, confirmPassword } = passwords;
-    if (!oldPassword) return "Enter Password";
-    if (!newPassword) return "Enter New Password";
-    if (!confirmPassword) return "Enter Confirm Password";
-    if (newPassword !== confirmPassword)
-      return "New Password And Confirm Password Mismatch";
+  const validateField = (name, value) => {
+    if (!value.trim()) {
+      return `${name.replace(/([A-Z])/g, " $1").trim()} is required`;
+    }
     return "";
   };
 
-  const handleSubmit = async (url, successMsg) => {
-    const validationError = validatePasswords();
-    if (validationError) {
-      setMessage({ errorMsg: validationError, successMsg: "" });
-      return;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      oldPassword: validateField("oldPassword", formData.oldPassword),
+      newPassword: validateField("newPassword", formData.newPassword),
+      confirmPassword: validateField(
+        "confirmPassword",
+        formData.confirmPassword,
+      ),
+    };
+
+    if (formData.newPassword !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
     }
+
+    setErrors(newErrors);
+    return !Object.values(newErrors).some((error) => error);
+  };
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
     setMessage({ errorMsg: "", successMsg: "" });
 
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...passwords,
-          userName,
-          userId,
-          position,
-        }),
-      });
+    if (!validateForm()) {
+      return;
+    }
 
-      const result = await response.json();
-      if (response.ok) {
-        setMessage({ errorMsg: "", successMsg });
-        setPasswords({ oldPassword: "", newPassword: "", confirmPassword: "" });
+    try {
+      const response = await execute(() =>
+        fetch(CHANGE_PWD_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
+          },
+          body: JSON.stringify({
+            oldPassword: formData.oldPassword,
+            newPassword: formData.newPassword,
+            userName,
+            userId,
+            position,
+          }),
+        }).then(async (res) => {
+          const data = await res.json();
+          if (!res.ok) {
+            throw new Error(data.message || "Failed to change password");
+          }
+          return data;
+        }),
+      );
+
+      if (response.message === "Password updated successfully") {
+        setMessage({ errorMsg: "", successMsg: response.message });
+        setFormData({
+          oldPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+        setErrors({
+          oldPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
       } else {
-        setMessage({ errorMsg: `Error: ${result.message}`, successMsg: "" });
+        setMessage({
+          errorMsg: response.message || "Failed to change password",
+          successMsg: "",
+        });
       }
     } catch (error) {
-      setMessage({ errorMsg: `Error: ${error.message}`, successMsg: "" });
+      setMessage({
+        errorMsg: error.message || "Failed to change password",
+        successMsg: "",
+      });
     }
   };
 
   return (
-    <div className="flex-1 overflow-auto p-4">
+    <div className="container mx-auto p-4">
       {message.errorMsg && (
-        <p className="my-1 text-center text-lg font-bold text-red-600">
-          {message.errorMsg}
-        </p>
+        <div className="mb-4 rounded-lg bg-red-100 p-4 text-center">
+          <p className="font-bold text-red-700">{message.errorMsg}</p>
+        </div>
       )}
       {message.successMsg && (
-        <p className="my-1 text-center text-lg font-bold text-green-700">
-          {message.successMsg}
-        </p>
+        <div className="mb-4 rounded-lg bg-green-100 p-4 text-center">
+          <p className="font-bold text-green-700">{message.successMsg}</p>
+        </div>
       )}
-      <div className="flex items-start justify-center">
-        <form
-          onSubmit={(e) => e.preventDefault()}
-          className="w-full rounded-xl bg-gray-800 p-6 lg:w-1/2"
-        >
-          {["Old", "New", "Confirm"].map((field) => (
-            <div key={field} className="relative my-3 w-full">
-              <label className="mb-2 block w-full text-xl font-bold text-white">
-                {`${field} Password`}
+      <div className="flex w-full justify-center">
+        <div className="flex w-full flex-col items-center lg:w-2/3">
+          <form
+            className="w-full rounded-lg bg-[#1a365d] p-4 font-bold text-white"
+            onSubmit={onFormSubmit}
+          >
+            <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2 md:grid-cols-[180px_1fr]">
+              <label className="text-left text-xl font-bold text-white">
+                Old Password:
               </label>
-              <div className="relative w-full">
+              <div className="flex flex-col">
                 <input
-                  type={
-                    visibility[`${field.toLowerCase()}Password`]
-                      ? "text"
-                      : "password"
-                  }
-                  name={`${field.toLowerCase()}Password`}
-                  value={passwords[`${field.toLowerCase()}Password`]}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0"
-                  placeholder={`${field} Password`}
+                  type="password"
+                  name="oldPassword"
+                  value={formData.oldPassword}
+                  onChange={handleChange}
+                  required
+                  className="w-full rounded-md border-2 border-white bg-white px-2 py-1 text-black focus:border-white focus:outline-none"
+                  placeholder="Enter Old Password"
                 />
-                <span
-                  className="absolute inset-y-0 right-3 flex cursor-pointer items-center"
-                  onClick={() =>
-                    handleVisibilityToggle(`${field.toLowerCase()}Password`)
-                  }
-                >
-                  {visibility[`${field.toLowerCase()}Password`] ? (
-                    <BiSolidHide size={24} />
-                  ) : (
-                    <BiSolidShow size={24} />
-                  )}
-                </span>
+                {errors.oldPassword && (
+                  <span className="mt-1 text-sm text-red-300">
+                    {errors.oldPassword}
+                  </span>
+                )}
               </div>
             </div>
-          ))}
-          <div className="mt-5 flex flex-col justify-center space-y-3">
-            <button
-              className="rounded bg-indigo-500 px-4 py-2 font-bold text-white hover:bg-indigo-700"
-              onClick={() =>
-                handleSubmit(CHANGE_PWD_URL, "Password updated successfully!")
-              }
-            >
-              Change Password
-            </button>
-            {position === "ADMIN" && (
+
+            <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2 md:grid-cols-[180px_1fr]">
+              <label className="text-left text-xl font-bold text-white">
+                New Password:
+              </label>
+              <div className="flex flex-col">
+                <input
+                  type="password"
+                  name="newPassword"
+                  value={formData.newPassword}
+                  onChange={handleChange}
+                  required
+                  className="w-full rounded-md border-2 border-white bg-white px-2 py-1 text-black focus:border-white focus:outline-none"
+                  placeholder="Enter New Password"
+                />
+                {errors.newPassword && (
+                  <span className="mt-1 text-sm text-red-300">
+                    {errors.newPassword}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2 md:grid-cols-[180px_1fr]">
+              <label className="text-left text-xl font-bold text-white">
+                Confirm Password:
+              </label>
+              <div className="flex flex-col">
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                  className="w-full rounded-md border-2 border-white bg-white px-2 py-1 text-black focus:border-white focus:outline-none"
+                  placeholder="Confirm New Password"
+                />
+                {errors.confirmPassword && (
+                  <span className="mt-1 text-sm text-red-300">
+                    {errors.confirmPassword}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-4 flex items-center justify-center">
               <button
-                className="rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700"
-                onClick={() =>
-                  handleSubmit(
-                    CHANGE_TPWD_URL,
-                    "Transaction Password updated successfully!",
-                  )
-                }
+                type="submit"
+                disabled={loading}
+                className="flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-[#1a365d] px-3 py-1.5 text-sm font-bold text-white transition-colors hover:bg-white hover:text-[#1a365d] disabled:opacity-50"
               >
-                Change Transaction Password
+                {loading ? "Submitting..." : "Submit"}
               </button>
-            )}
-          </div>
-        </form>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

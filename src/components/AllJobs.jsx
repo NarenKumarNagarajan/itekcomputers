@@ -4,6 +4,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import { format, parse } from "date-fns";
 import { debounce } from "lodash";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useApi } from "../hooks/useApi";
+import { FETCH_ALL_JOBS_URL } from "../utils/globalConstants";
 
 import {
   ALL_DATA_URL,
@@ -152,10 +155,12 @@ const AllJobs = () => {
 
       if (response.status === 200) {
         setAllData((prevData) =>
-          prevData.filter((item) => item.jobID !== jobID),
+          prevData.filter((item) => item.JOB_ID !== jobID),
         );
         setMessage({ errorMsg: "", successMsg: "Job deleted successfully" });
         closeDeletePopup();
+        // Refresh data after successful deletion
+        fetchJobDetails();
       } else {
         setMessage({
           errorMsg: data.message || "Failed to delete job",
@@ -180,15 +185,15 @@ const AllJobs = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto py-4">
       {message.errorMsg && (
-        <div className="mb-4 rounded-lg bg-red-100 p-4 text-red-700">
-          {message.errorMsg}
+        <div className="mb-4 rounded-lg bg-red-100 p-4 text-center text-red-700">
+          <p className="font-bold">{message.errorMsg}</p>
         </div>
       )}
       {message.successMsg && (
-        <div className="mb-4 rounded-lg bg-green-100 p-4 text-green-700">
-          {message.successMsg}
+        <div className="mb-4 rounded-lg bg-green-100 p-4 text-center text-green-700">
+          <p className="font-bold">{message.successMsg}</p>
         </div>
       )}
       <div className="flex w-full justify-center">

@@ -1,57 +1,76 @@
-import { useState, useCallback, useRef } from "react";
-import { api } from "../services/api";
+import { useState, useCallback } from "react";
 
-const CACHE_TIME = 5 * 60 * 1000; // 5 minutes
+const getHeaders = (token) => ({
+  "Content-Type": "application/json",
+  ...(token && { Authorization: `Bearer ${token}` }),
+});
+
+const handleResponse = async (response) => {
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || "Something went wrong");
+  }
+  return response.json();
+};
 
 export const useApi = () => {
-  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const cache = useRef(new Map());
 
-  const execute = useCallback(async (apiCall, params = {}) => {
-    setIsLoading(true);
+  const fetchData = useCallback(async (endpoint, token) => {
+    setLoading(true);
     setError(null);
-
     try {
-      // Check cache
-      const cacheKey = JSON.stringify({ apiCall, params });
-      const cachedData = cache.current.get(cacheKey);
-
-      if (cachedData && Date.now() - cachedData.timestamp < CACHE_TIME) {
-        setData(cachedData.data);
-        setIsLoading(false);
-        return cachedData.data;
-      }
-
-      // Make API call
-      const result = await apiCall(params);
-
-      // Update cache
-      cache.current.set(cacheKey, {
-        data: result,
-        timestamp: Date.now(),
+      const response = await fetch(endpoint, {
+        method: "GET",
+        headers: getHeaders(token),
       });
-
-      setData(result);
-      return result;
+      return handleResponse(response);
     } catch (err) {
-      setError(err.message || "An error occurred");
+      setError(err.message);
       throw err;
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   }, []);
 
-  const clearCache = useCallback(() => {
-    cache.current.clear();
+  const postData = useCallback(async (endpoint, data, token) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: getHeaders(token),
+        body: JSON.stringify(data),
+      });
+      return handleResponse(response);
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const execute = useCallback(async (apiCall) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await apiCall();
+      return response;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   return {
-    data,
+    loading,
     error,
-    isLoading,
+    fetchData,
+    postData,
     execute,
-    clearCache,
   };
 };

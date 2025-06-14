@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { useForm } from "../hooks/useForm";
-import { useApiData } from "../hooks/useApiData";
 import { useFormValidation } from "../hooks/useFormValidation";
+import { useApi } from "../hooks/useApi";
 import Input from "./common/Input";
 import {
   TextareaField,
@@ -234,7 +234,7 @@ const JobSheet = () => {
   const { formData, errors, handleChange, setErrors, resetForm, setFormData } =
     useForm(initialFormState);
 
-  const { loading, error: apiError, fetchData, postData } = useApiData();
+  const { loading, error: apiError, fetchData, postData } = useApi();
   const { validateJobSheet } = useFormValidation();
   const [message, setMessage] = useState({ type: "", text: "" });
 

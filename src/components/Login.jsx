@@ -4,11 +4,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import logo from "../images/logo.png";
-import { COOKIE_TIME } from "../utils/globalConstants";
+import { COOKIE_TIME, LOGIN_URL } from "../utils/globalConstants";
 import useVerifyLogin from "../hooks/useVerifyLogin";
 import { addUser } from "../redux/loginSlice";
 import { useApi } from "../hooks/useApi";
-import { api } from "../services/api";
 import Input from "./common/Input";
 import Button from "./common/Button";
 import ErrorMessage from "./common/ErrorMessage";
@@ -27,7 +26,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const { execute: login, isLoading, error: apiError } = useApi();
+  const { postData, loading: isLoading, error: apiError } = useApi();
 
   useVerifyLogin(location.pathname);
 
@@ -59,9 +58,10 @@ const Login = () => {
     }
 
     try {
-      const data = await login(() =>
-        api.login({ USERNAME: userName, PASSWORD: password }),
-      );
+      const data = await postData(LOGIN_URL, {
+        USERNAME: userName,
+        PASSWORD: password,
+      });
 
       setErrors({
         username: "",
@@ -80,7 +80,7 @@ const Login = () => {
         general: error.message || "An unexpected error occurred",
       }));
     }
-  }, [userName, password, validateForm, login, dispatch, navigate]);
+  }, [userName, password, validateForm, postData, dispatch, navigate]);
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {

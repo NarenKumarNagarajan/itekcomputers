@@ -7,6 +7,7 @@ import {
   BUTTON_COLORS,
   BUTTON_SIZES,
   TABLE_HEADERS,
+  JOB_STATUS_COLORS,
 } from "../utils/globalConstants";
 import JobDetailPopUp from "./JobDetailPopUp";
 
@@ -43,30 +44,7 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
   };
 
   const getStatusColor = (status) => {
-    switch (status) {
-      case "Service Pending":
-        return "bg-red-200";
-      case "Completed":
-        return "bg-green-200";
-      case "Approval Pending":
-        return "bg-yellow-200";
-      case "Chiplevel Pending":
-        return "bg-orange-200";
-      case "Delivery Pending":
-        return "bg-blue-200";
-      case "Cash Pending":
-        return "bg-purple-200";
-      case "Return Pending":
-        return "bg-pink-200";
-      case "Warranty Service":
-        return "bg-indigo-200";
-      case "Returned":
-        return "bg-gray-200";
-      case "In Progress":
-        return "bg-cyan-200";
-      default:
-        return "";
-    }
+    return JOB_STATUS_COLORS[status] || JOB_STATUS_COLORS.default;
   };
 
   useEffect(() => {
@@ -113,6 +91,9 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
                     {row.newID}
                   </td>
                   <td className="border border-white px-2 py-1 whitespace-nowrap">
+                    {row.JOB_ID}
+                  </td>
+                  <td className="border border-white px-2 py-1 whitespace-nowrap">
                     {row.NAME}
                   </td>
                   <td className="border border-white px-2 py-1 whitespace-nowrap">
@@ -142,20 +123,20 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
                     <div className="flex justify-center gap-4">
                       <button
                         className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
-                        onClick={() => handleView(row.newID)}
+                        onClick={() => handleView(row.JOB_ID)}
                       >
                         View
                       </button>
                       <button
                         className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
-                        onClick={() => handleEdit(row.newID)}
+                        onClick={() => handleEdit(row.JOB_ID)}
                       >
                         Edit
                       </button>
                       {position === "ADMIN" && (
                         <button
                           className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
-                          onClick={() => handleDelete(row.newID)}
+                          onClick={() => handleDelete(row.JOB_ID)}
                         >
                           Delete
                         </button>

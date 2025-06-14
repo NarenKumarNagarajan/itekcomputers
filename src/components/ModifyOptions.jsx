@@ -1,11 +1,13 @@
 import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useApi } from "../hooks/useApi";
 import {
   DELETE_PICKERS_URL,
   INSERT_PICKERS_URL,
   PICKERS_LIST_URL,
   UPDATE_PICKERS_URL,
 } from "../utils/globalConstants";
-import { useSelector } from "react-redux";
 
 const menus = ["ENGINEER", "MOC", "ASSET", "PRODUCT", "FAULT", "STATUS"];
 const tableHead = ["S. NO", "PICKERS", "ACTIONS"];
@@ -23,6 +25,7 @@ const ModifyOptions = () => {
 
   const timeoutRef = useRef(null);
   const { jwtToken, position } = useSelector((store) => store.loginSlice);
+  const { fetchData: useApiFetchData } = useApi();
 
   const resetInput = () => {
     setInputOpen(false);
@@ -195,10 +198,10 @@ const ModifyOptions = () => {
           key={index}
           className={`hover:bg-gray-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-100"}`}
         >
-          <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
+          <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
             {index + 1}
           </td>
-          <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
+          <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
             {editingPicker === row ? (
               <input
                 type="text"
@@ -210,7 +213,7 @@ const ModifyOptions = () => {
               row
             )}
           </td>
-          <td className="whitespace-nowrap border border-gray-300 px-2 py-1 text-center">
+          <td className="border border-gray-300 px-2 py-1 text-center whitespace-nowrap">
             <div className="flex justify-center gap-4">
               {editingPicker === row ? (
                 <>
@@ -328,7 +331,7 @@ const ModifyOptions = () => {
       </div>
 
       {deletePopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-opacity-50 fixed inset-0 flex items-center justify-center bg-black">
           <div className="w-4/5 rounded-lg bg-white p-6 text-center lg:w-1/4">
             <p className="text-lg font-bold">
               Are you sure you want to delete &quot;{selectedPicker}&quot;?
