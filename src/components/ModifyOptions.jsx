@@ -7,6 +7,9 @@ import {
   INSERT_PICKERS_URL,
   PICKERS_LIST_URL,
   UPDATE_PICKERS_URL,
+  BUTTON_BASE_STYLE,
+  BUTTON_COLORS,
+  BUTTON_SIZES,
 } from "../utils/globalConstants";
 
 const menus = ["ENGINEER", "MOC", "ASSET", "PRODUCT", "FAULT", "STATUS"];
@@ -79,90 +82,101 @@ const ModifyOptions = () => {
     }
   };
 
-  const handlePickerAction = async (
-    url,
-    method,
-    body,
-    successMessage,
-    callback,
-  ) => {
+  const handlePickerAction = async (url, method, body, successMessage) => {
     try {
       const response = await fetch(url, {
         method,
         headers: {
-          Authorization: `Bearer ${jwtToken}`,
           "Content-Type": "application/json",
+          Authorization: `Bearer ${jwtToken}`,
         },
         body: JSON.stringify(body),
       });
 
       const data = await response.json();
+
+      // Check if response is ok
       if (response.ok) {
-        showMessage("success", successMessage || data.message);
-        callback && callback();
+        setMessage({ errorMsg: "", successMsg: data.message });
+        await fetchData();
+        return true;
       } else {
-        showMessage("error", data.error || "Action failed.");
+        // Handle error messages from the server
+        setMessage({
+          errorMsg: data.message || data.error || "Operation failed",
+          successMsg: "",
+        });
+        return false;
       }
     } catch (error) {
-      console.error("Error with picker action:", error.message);
-      showMessage("error", "Action failed.");
+      setMessage({
+        errorMsg: error.message || "Operation failed",
+        successMsg: "",
+      });
+      return false;
     }
   };
 
-  const insertPicker = () => {
-    if (inputData.trim().length < 1) {
-      showMessage("error", "Invalid data to insert.");
+  const insertPicker = async () => {
+    if (!inputData.trim()) {
+      setMessage({ errorMsg: "Please enter a picker name", successMsg: "" });
       return;
     }
 
-    handlePickerAction(
+    const success = await handlePickerAction(
       INSERT_PICKERS_URL,
       "POST",
-      { menuSelected, pickerName: inputData },
+      { menuSelected, pickerName: inputData, position },
       "Picker added successfully!",
-      () => {
-        resetInput();
-        fetchData();
-      },
     );
+
+    if (success) {
+      setInputData("");
+      setInputOpen(false);
+    }
   };
 
-  const deletePicker = () => {
+  const deletePicker = async () => {
     if (!selectedPicker) return;
 
-    handlePickerAction(
+    const success = await handlePickerAction(
       DELETE_PICKERS_URL,
       "POST",
-      { menuSelected, pickerName: selectedPicker, position },
-      "Picker deleted successfully!",
-      () => {
-        fetchData();
-        closeDeletePopup();
+      {
+        menuSelected: menuSelected,
+        pickerName: selectedPicker,
+        position,
       },
+      `Picker '${selectedPicker}' deleted successfully.`,
     );
+
+    if (success) {
+      closeDeletePopup();
+    }
   };
 
-  const updatePicker = () => {
+  const updatePicker = async (picker) => {
     if (!editValue.trim()) {
       showMessage("error", "Picker name cannot be empty.");
       return;
     }
 
-    handlePickerAction(
+    const success = await handlePickerAction(
       UPDATE_PICKERS_URL,
       "POST",
       {
         menuSelected,
-        oldPicker: editingPicker,
+        oldPicker: picker,
         newPicker: editValue.trim(),
         position,
       },
       "Picker updated successfully!",
-      () => {
-        fetchData();
-        handleEditCancel();
-      },
     );
+
+    if (success) {
+      setEditingPicker(null);
+      setEditValue("");
+    }
   };
 
   const handleEditCancel = () => {
@@ -180,16 +194,23 @@ const ModifyOptions = () => {
     setSelectedPicker(null);
   };
 
-  const renderMessage = () =>
-    message.text && (
-      <p
-        className={`my-2 text-center text-lg font-bold ${
-          message.type === "error" ? "text-red-600" : "text-green-700"
-        }`}
-      >
-        {message.text}
-      </p>
-    );
+  const renderMessage = () => {
+    if (message.errorMsg) {
+      return (
+        <div className="my-4 rounded-lg bg-red-100 p-4 text-center">
+          <p className="font-bold text-red-700">{message.errorMsg}</p>
+        </div>
+      );
+    }
+    if (message.successMsg) {
+      return (
+        <div className="my-4 rounded-lg bg-green-100 p-4 text-center">
+          <p className="font-bold text-green-700">{message.successMsg}</p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   const renderTable = () =>
     pickerData.length > 0 ? (
@@ -218,13 +239,13 @@ const ModifyOptions = () => {
               {editingPicker === row ? (
                 <>
                   <button
-                    className="rounded bg-green-500 px-2 py-1 font-bold text-white hover:bg-green-700"
-                    onClick={updatePicker}
+                    className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
+                    onClick={() => updatePicker(row)}
                   >
                     SAVE
                   </button>
                   <button
-                    className="rounded bg-red-500 px-2 py-1 font-bold text-white hover:bg-red-700"
+                    className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
                     onClick={handleEditCancel}
                   >
                     CANCEL
@@ -233,7 +254,7 @@ const ModifyOptions = () => {
               ) : (
                 <>
                   <button
-                    className="rounded bg-blue-500 px-2 py-1 font-bold text-white hover:bg-blue-700"
+                    className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
                     onClick={() => {
                       setEditingPicker(row);
                       setEditValue(row);
@@ -242,7 +263,7 @@ const ModifyOptions = () => {
                     EDIT
                   </button>
                   <button
-                    className="rounded bg-red-500 px-2 py-1 font-bold text-white hover:bg-red-700"
+                    className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
                     onClick={() => openDeletePopup(row)}
                   >
                     DELETE
@@ -267,12 +288,12 @@ const ModifyOptions = () => {
         {menus.map((menu) => (
           <button
             key={menu}
-            className={`m-2 w-1/3 border-2 border-black py-1 font-bold outline-0 lg:w-1/6 ${
-              menuSelected === menu
-                ? "bg-black text-white"
-                : "bg-white text-black"
-            }`}
             onClick={() => setMenuSelected(menu)}
+            className={`mb-2 w-[100px] rounded-full border-2 px-3 py-2 text-sm font-bold transition-colors ${
+              menuSelected === menu
+                ? "border-[#1a365d] bg-white text-[#1a365d]"
+                : "border-[#1a365d] bg-[#1a365d] text-white hover:bg-white hover:text-[#1a365d]"
+            }`}
           >
             {menu}
           </button>
@@ -280,9 +301,9 @@ const ModifyOptions = () => {
       </div>
 
       {!inputOpen ? (
-        <div className="mt-1 flex justify-center">
+        <div className="mt-5 flex justify-center">
           <button
-            className="rounded bg-green-500 px-2 py-1 font-bold text-white hover:bg-green-700"
+            className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.LARGE} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
             onClick={() => setInputOpen(true)}
           >
             ADD NEW {menuSelected}
@@ -298,13 +319,13 @@ const ModifyOptions = () => {
               onChange={(e) => setInputData(e.target.value)}
             />
             <button
-              className="rounded bg-green-500 px-2 py-1 font-bold text-white hover:bg-green-700"
+              className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
               onClick={insertPicker}
             >
               SAVE
             </button>
             <button
-              className="rounded bg-red-500 px-2 py-1 font-bold text-white hover:bg-red-700"
+              className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
               onClick={resetInput}
             >
               CANCEL
@@ -318,7 +339,7 @@ const ModifyOptions = () => {
       <div className="mt-4 overflow-auto">
         <table className="w-full border border-gray-300">
           <thead>
-            <tr className="bg-gray-300 text-center font-bold">
+            <tr className="bg-[#1a365d] text-center font-bold text-white">
               {tableHead.map((head, index) => (
                 <th key={index} className="border border-gray-300 px-2 py-1">
                   {head}
@@ -331,23 +352,34 @@ const ModifyOptions = () => {
       </div>
 
       {deletePopup && (
-        <div className="bg-opacity-50 fixed inset-0 flex items-center justify-center bg-black">
-          <div className="w-4/5 rounded-lg bg-white p-6 text-center lg:w-1/4">
-            <p className="text-lg font-bold">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#1a365d]/50"
+          onClick={(e) => {
+            // Only close if clicking the overlay (not the popup content)
+            if (e.target === e.currentTarget) {
+              closeDeletePopup();
+            }
+          }}
+        >
+          <div className="rounded-lg bg-white p-4 shadow-lg">
+            <h2 className="mb-4 text-center text-xl font-bold">
+              Delete Picker
+            </h2>
+            <p className="mb-6 text-center">
               Are you sure you want to delete &quot;{selectedPicker}&quot;?
             </p>
-            <div className="mt-4 flex justify-around">
+            <div className="flex justify-center space-x-4">
               <button
-                className="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700"
+                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
                 onClick={deletePicker}
               >
-                YES
+                Delete
               </button>
               <button
-                className="rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700"
+                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
                 onClick={closeDeletePopup}
               >
-                NO
+                Close
               </button>
             </div>
           </div>
