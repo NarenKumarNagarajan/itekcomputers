@@ -1,8 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
-
 import { BiSolidHide, BiSolidShow } from "react-icons/bi";
-import { CREATE_USER_URL } from "../utils/globalConstants";
+import { useNavigate } from "react-router-dom";
+import {
+  CREATE_USER_URL,
+  PASSWORD_VALIDATIONS,
+  PASSWORD_REQUIREMENTS,
+} from "../utils/globalConstants";
 
 const CreateUser = () => {
   const [credentials, setCredentials] = useState({
@@ -54,11 +58,11 @@ const CreateUser = () => {
 
     // Password validation
     const password = credentials.newPassword;
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumbers = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-    const isLongEnough = password.length >= 6;
+    const hasUpperCase = PASSWORD_VALIDATIONS.HAS_UPPERCASE.test(password);
+    const hasLowerCase = PASSWORD_VALIDATIONS.HAS_LOWERCASE.test(password);
+    const hasNumbers = PASSWORD_VALIDATIONS.HAS_NUMBERS.test(password);
+    const hasSpecialChar = PASSWORD_VALIDATIONS.HAS_SPECIAL_CHAR.test(password);
+    const isLongEnough = password.length >= PASSWORD_VALIDATIONS.MIN_LENGTH;
 
     if (!isLongEnough) {
       setMessage({
@@ -268,14 +272,9 @@ const CreateUser = () => {
             <div className="mt-6 text-sm text-white">
               <p className="mb-2 font-bold">Password Requirements:</p>
               <ul className="list-inside list-disc space-y-1">
-                <li>Minimum 6 characters long</li>
-                <li>At least one uppercase letter (A-Z)</li>
-                <li>At least one lowercase letter (a-z)</li>
-                <li>At least one number (0-9)</li>
-                <li>
-                  At least one special character (!@#$%^&*(),.?&quot;:{}
-                  |&lt;&gt;)
-                </li>
+                {PASSWORD_REQUIREMENTS.map((requirement, index) => (
+                  <li key={index}>{requirement}</li>
+                ))}
               </ul>
             </div>
           </form>

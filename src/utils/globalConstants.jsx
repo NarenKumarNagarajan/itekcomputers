@@ -123,3 +123,20 @@ export const TABLE_HEADERS = {
     "ACTION",
   ],
 };
+
+// Password Validation Constants
+export const PASSWORD_VALIDATIONS = {
+  MIN_LENGTH: 6,
+  HAS_UPPERCASE: /[A-Z]/,
+  HAS_LOWERCASE: /[a-z]/,
+  HAS_NUMBERS: /\d/,
+  HAS_SPECIAL_CHAR: /[!@#$%^&*(),.?":{}|<>]/,
+};
+
+export const PASSWORD_REQUIREMENTS = [
+  "Minimum 6 characters long",
+  "At least one uppercase letter (A-Z)",
+  "At least one lowercase letter (a-z)",
+  "At least one number (0-9)",
+  'At least one special character (!@#$%^&*(),.?":{}|<>)',
+];
