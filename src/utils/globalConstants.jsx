@@ -72,14 +72,13 @@ export const ADMIN_MENU_ITEMS = [
   { title: "CUSTOMER DETAIL", link: "/customerDetail" },
   { title: "CREATE USER", link: "/createUser" },
   { title: "USER LIST", link: "/userList" },
-  { title: "INSIGHTS OVERVIEW", link: "/insightsOverview" },
+  { title: "BUSINESS INSIGHTS", link: "/insights" },
 ];
 
 export const USER_MENU_ITEMS = [
   { title: "ALL JOBS", link: "/allJobs" },
   { title: "JOB SHEET", link: "/jobSheet" },
   { title: "CHANGE PASSWORD", link: "/changePassword" },
-  { title: "INSIGHTS OVERVIEW", link: "/insightsOverview" },
 ];
 
 /* ================ UI Constants ================ */

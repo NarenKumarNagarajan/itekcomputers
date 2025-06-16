@@ -165,7 +165,7 @@ const AppContent = () => {
           }
         />
         <Route
-          path="/insightsOverview"
+          path="/insights"
           element={
             <Layout>
               <InsightsComponent />

@@ -3,11 +3,14 @@ import {
   DELETE_USER_URL,
   RESET_PASSWORD_URL,
   USER_LIST_URL,
+  BUTTON_BASE_STYLE,
+  BUTTON_COLORS,
+  BUTTON_SIZES,
 } from "../utils/globalConstants";
 import { useSelector } from "react-redux";
 
 const UserList = () => {
-  const [allData, setAllData] = useState({});
+  const [allData, setAllData] = useState([]);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [selectedUsername, setSelectedUsername] = useState("");
   const [message, setMessage] = useState({ errorMsg: "", successMsg: "" });
@@ -30,9 +33,10 @@ const UserList = () => {
         throw new Error(`Failed to fetch job details: ${response.statusText}`);
 
       const data = await response.json();
-      setAllData(data);
+      setAllData(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching job details:", error.message);
+      setMessage({ errorMsg: "Failed to fetch user details", successMsg: "" });
     }
   };
 
@@ -59,23 +63,14 @@ const UserList = () => {
         setMessage({ errorMsg: `Error: ${result.message}`, successMsg: "" });
       }
     } catch (error) {
-      setMessage({ errorMsg: `Error: ${error.message}`, successMsg: "" });
+      setMessage({
+        errorMsg: "An error occurred while resetting password",
+        successMsg: "",
+      });
     }
   };
 
-  const openPopup = (userName) => {
-    setSelectedUsername(userName);
-    setIsDeletePopupOpen(true);
-  };
-
-  const closePopup = () => {
-    setSelectedUsername("");
-    setIsDeletePopupOpen(false);
-  };
-
-  const handleDelete = async (userName) => {
-    setIsDeletePopupOpen(false);
-
+  const handleDeleteUser = async (userName) => {
     try {
       const response = await fetch(DELETE_USER_URL, {
         method: "POST",
@@ -94,70 +89,74 @@ const UserList = () => {
         setMessage({ errorMsg: `Error: ${result.message}`, successMsg: "" });
       }
     } catch (error) {
-      setMessage({ errorMsg: `Error: ${error.message}`, successMsg: "" });
+      setMessage({
+        errorMsg: "An error occurred while deleting user",
+        successMsg: "",
+      });
     }
   };
 
   return (
     <div className="flex-1 overflow-auto p-4">
       {message.errorMsg && (
-        <p className="my-1 text-center text-lg font-bold text-red-600">
-          {message.errorMsg}
-        </p>
+        <div className="mb-4 rounded-lg bg-red-100 p-4 text-center text-red-700">
+          <p className="font-bold">{message.errorMsg}</p>
+        </div>
       )}
       {message.successMsg && (
-        <p className="my-1 text-center text-lg font-bold text-green-700">
-          {message.successMsg}
-        </p>
+        <div className="mb-4 rounded-lg bg-green-100 p-4 text-center text-green-700">
+          <p className="font-bold">{message.successMsg}</p>
+        </div>
       )}
-      <div className="mt-3 overflow-x-auto">
-        <table className="w-full border-collapse overflow-auto border-2 border-[#ddd]">
+      <div className="mt-4 overflow-auto">
+        <table className="w-full border border-gray-300">
           <thead>
-            <tr className="bg-black text-white">
-              {tableHead.map((heading, index) => (
-                <th
-                  key={index}
-                  className="whitespace-nowrap border border-gray-300 px-2 py-1 text-center"
-                >
-                  {heading}
+            <tr className="bg-[#1a365d] text-center font-bold text-white">
+              {tableHead.map((head, index) => (
+                <th key={index} className="border border-gray-300 px-2 py-1">
+                  {head}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
             {allData.length > 0 ? (
-              allData.map((row, index) => (
+              allData.map((user, index) => (
                 <tr
-                  key={row.ID}
+                  key={index}
                   className={`hover:bg-gray-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-100"}`}
                 >
-                  <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
-                    {row.ID}
+                  <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
+                    {user.ID}
                   </td>
-                  <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
-                    {row.USERNAME}
+                  <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
+                    {user.USERNAME}
                   </td>
-                  <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
-                    {row.NAME}
+                  <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
+                    {user.NAME}
                   </td>
-                  <td className="whitespace-nowrap border border-gray-300 px-2 py-1">
-                    {row.LAST_LOGIN}
+                  <td className="border border-gray-300 px-2 py-1 whitespace-nowrap">
+                    {user.LAST_LOGIN === "NONE" ? "Never" : user.LAST_LOGIN}
                   </td>
-
-                  <td className="whitespace-nowrap border border-gray-300 px-2 py-1 text-center">
+                  <td className="border border-gray-300 px-2 py-1 text-center whitespace-nowrap">
                     <div className="flex justify-center gap-4">
                       <button
-                        className="rounded bg-blue-500 px-2 py-1 font-bold text-white hover:bg-blue-700"
-                        onClick={() => handleResetPassword(row.USERNAME)}
+                        onClick={() => handleResetPassword(user.USERNAME)}
+                        className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
                       >
-                        Reset Password
+                        Reset Pwd
                       </button>
-                      <button
-                        className="rounded bg-red-500 px-2 py-1 font-bold text-white hover:bg-red-700"
-                        onClick={() => openPopup(row.USERNAME)}
-                      >
-                        Delete
-                      </button>
+                      {position === "ADMIN" && (
+                        <button
+                          onClick={() => {
+                            setSelectedUsername(user.USERNAME);
+                            setIsDeletePopupOpen(true);
+                          }}
+                          className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+                        >
+                          Delete
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -172,23 +171,29 @@ const UserList = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Delete Confirmation Popup */}
       {isDeletePopupOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1a365d]/50">
           <div className="rounded-lg bg-white p-4 shadow-lg">
-            <div>
-              Dp you want to delete user -{" "}
-              <span className="font-bold">{selectedUsername}</span> ?
-            </div>
-            <div className="mt-4 flex justify-center space-x-10">
+            <h2 className="mb-4 text-center text-xl font-bold">Delete User</h2>
+            <p className="mb-6 text-center">
+              Are you sure you want to delete user &quot;{selectedUsername}
+              &quot;?
+            </p>
+            <div className="flex justify-center space-x-4">
               <button
-                className="rounded bg-indigo-500 px-4 py-2 font-bold text-white hover:bg-indigo-700"
-                onClick={() => handleDelete(selectedUsername)}
+                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
+                onClick={() => {
+                  handleDeleteUser(selectedUsername);
+                  setIsDeletePopupOpen(false);
+                }}
               >
                 Delete
               </button>
               <button
-                className="rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700"
-                onClick={closePopup}
+                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+                onClick={() => setIsDeletePopupOpen(false)}
               >
                 Close
               </button>

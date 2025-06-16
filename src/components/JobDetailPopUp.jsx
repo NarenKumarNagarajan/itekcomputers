@@ -187,17 +187,6 @@ const JobDetailPopUp = ({ selectedJobID, closePopup, isPopupOpen }) => {
               </tr>
               <tr>
                 <td className="border bg-[#1a365d] p-2 font-bold text-white">
-                  PROFIT
-                </td>
-                <td className="border p-2">
-                  {typeof dataByJobID.AMOUNT === "number" &&
-                  typeof dataByJobID.PURCHASE_AMOUNT === "number"
-                    ? dataByJobID.AMOUNT - dataByJobID.PURCHASE_AMOUNT
-                    : "N/A"}
-                </td>
-              </tr>
-              <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
                   LAST MODIFIED BY
                 </td>
                 <td className="border p-2">{dataByJobID.LAST_MODIFIED}</td>
