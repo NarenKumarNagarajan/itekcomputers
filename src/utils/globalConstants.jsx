@@ -6,16 +6,16 @@ export const COOKIE_TIME = 1.5 / 24; // 1.5 hours in days
 
 /* ================ Status Colors ================ */
 export const JOB_STATUS_COLORS = {
-  "Service Pending": "bg-orange-300",
+  "Service Pending": "bg-red-500",
   "Approval Pending": "bg-yellow-300",
   "Chiplevel Pending": "bg-purple-300",
   "Delivery Pending": "bg-indigo-300",
   "Cash Pending": "bg-pink-300",
-  "Return Pending": "bg-red-300",
-  "Warranty Service": "bg-blue-300",
-  Returned: "bg-red-300",
-  Completed: "bg-green-300",
-  "In Progress": "bg-blue-300",
+  "Return Pending": "bg-orange-300",
+  "Warranty Service": "bg-gray-500",
+  Returned: "bg-purple-300",
+  Completed: "bg-green-500",
+  "In Progress": "bg-blue-500",
   Default: "bg-gray-300",
 };
 
@@ -37,7 +37,7 @@ export const FETCH_ALL_JOBS_URL = `${BASE_URL}/allJobs`;
 export const INSERT_URL = `${BASE_URL}/insert`;
 export const EDIT_JOB_URL = `${BASE_URL}/editJob`;
 export const DELETE_JOB_URL = `${BASE_URL}/deleteJob`;
-export const INSIGHT_URL = `${BASE_URL}/insight`;
+export const INSIGHTS_URL = `${BASE_URL}/insight`;
 
 /* ================ Picker Related URLs ================ */
 export const PICKERS_URL = `${BASE_URL}/jobSheetPickers`;
