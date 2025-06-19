@@ -41,6 +41,7 @@ const AllJobs = () => {
   const [jobToDelete, setJobToDelete] = useState(null);
 
   const { jwtToken, position } = useSelector((store) => store.loginSlice);
+  const { isSidebarOpen } = useSelector((store) => store.sidebarSlice);
 
   const fetchJobDetails = async () => {
     try {
@@ -185,7 +186,7 @@ const AllJobs = () => {
   };
 
   return (
-    <div className="container mx-auto py-4">
+    <div className="py-4">
       {message.errorMsg && (
         <div className="mb-4 rounded-lg bg-red-100 p-4 text-center text-red-700">
           <p className="font-bold">{message.errorMsg}</p>
