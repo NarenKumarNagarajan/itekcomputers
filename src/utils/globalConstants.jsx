@@ -2,7 +2,7 @@
 const BASE_URL = "http://localhost:7000";
 
 /* ================ Cookie Constants ================ */
-export const COOKIE_TIME = 1.5 / 24; // 1.5 hours in days
+export const COOKIE_TIME = 3 / 24; // 3 hours in days
 
 /* ================ Status Colors ================ */
 export const JOB_STATUS_COLORS = {
