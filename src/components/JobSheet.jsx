@@ -2,16 +2,11 @@ import { useEffect, useState } from "react";
 import { format, addDays, parse } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "../hooks/useForm";
 import { useFormValidation } from "../hooks/useFormValidation";
 import { useApi } from "../hooks/useApi";
-import Input from "./common/Input";
-import {
-  TextareaField,
-  SelectField,
-  DatePickerField,
-} from "./common/FormFields";
 import {
   FETCH_JOB_ID_URL,
   INSERT_URL,
@@ -49,7 +44,7 @@ const initialFormState = {
 };
 
 const SectionHeader = ({ title }) => (
-  <h1 className="w-full border-2 border-[#1a365d] bg-[#1a365d] p-2 text-xl font-bold text-white">
+  <h1 className="w-full border-2 border-[#1a365d] bg-[#1a365d] p-2 font-bold text-white">
     {title}
   </h1>
 );
@@ -58,87 +53,179 @@ const CustomerDetails = ({ formData, errors, handleChange }) => (
   <div className="w-full rounded-lg border-2 border-[#1a365d] p-4 lg:w-1/2">
     <SectionHeader title="Customer Details" />
     <div className="mt-4 space-y-4">
-      <Input
-        label="Job ID"
-        name="jobID"
-        value={formData.jobID}
-        onChange={handleChange}
-        error={errors.jobID}
-        placeholder="Job ID"
-      />
-      <Input
-        label="Customer Name"
-        name="customerName"
-        value={formData.customerName}
-        onChange={handleChange}
-        error={errors.customerName}
-        placeholder="Enter customer name"
-      />
-      <Input
-        label="Mobile Number"
-        name="mobileNo"
-        value={formData.mobileNo}
-        onChange={handleChange}
-        error={errors.mobileNo}
-        type="tel"
-        placeholder="Enter mobile number"
-      />
-      <Input
-        label="Email Address"
-        name="email"
-        value={formData.email}
-        onChange={handleChange}
-        error={errors.email}
-        type="email"
-        placeholder="Enter email address"
-      />
-      <TextareaField
-        label="Address"
-        name="address"
-        value={formData.address}
-        onChange={handleChange}
-        error={errors.address}
-        placeholder="Enter address"
-        maxLength={500}
-      />
-      <SelectField
-        label="Assigned Engineer"
-        name="engineer"
-        value={formData.engineer}
-        onChange={handleChange}
-        options={formData.engineerPicker}
-        error={errors.engineer}
-      />
-      <SelectField
-        label="Mode of Contact"
-        name="moc"
-        value={formData.moc}
-        onChange={handleChange}
-        options={formData.mocPicker}
-        error={errors.moc}
-      />
-      <DatePickerField
-        label="In Date"
-        selected={parse(formData.inDate, "dd/MM/yyyy", new Date())}
-        onChange={(date) =>
-          handleChange({
-            target: { name: "inDate", value: format(date, "dd/MM/yyyy") },
-          })
-        }
-        error={errors.inDate}
-        placeholder="Select in date"
-      />
-      <DatePickerField
-        label="Out Date"
-        selected={parse(formData.outDate, "dd/MM/yyyy", new Date())}
-        onChange={(date) =>
-          handleChange({
-            target: { name: "outDate", value: format(date, "dd/MM/yyyy") },
-          })
-        }
-        error={errors.outDate}
-        placeholder="Select out date"
-      />
+      {/* Job ID */}
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">Job ID</label>
+        <div className="w-2/3">
+          <input
+            type="text"
+            name="jobID"
+            value={formData.jobID}
+            onChange={handleChange}
+            placeholder="Job ID"
+            className={`w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.jobID ? "border-red-500" : ""}`}
+          />
+          {errors.jobID && <p className="mt-1 text-red-500">{errors.jobID}</p>}
+        </div>
+      </div>
+      {/* Customer Name */}
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
+          Customer Name
+        </label>
+        <div className="w-2/3">
+          <input
+            type="text"
+            name="customerName"
+            value={formData.customerName}
+            onChange={handleChange}
+            placeholder="Enter customer name"
+            className={`w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.customerName ? "border-red-500" : ""}`}
+          />
+          {errors.customerName && (
+            <p className="mt-1 text-red-500">{errors.customerName}</p>
+          )}
+        </div>
+      </div>
+      {/* Mobile Number */}
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
+          Mobile Number
+        </label>
+        <div className="w-2/3">
+          <input
+            type="tel"
+            name="mobileNo"
+            value={formData.mobileNo}
+            onChange={handleChange}
+            placeholder="Enter mobile number"
+            className={`w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.mobileNo ? "border-red-500" : ""}`}
+          />
+          {errors.mobileNo && (
+            <p className="mt-1 text-red-500">{errors.mobileNo}</p>
+          )}
+        </div>
+      </div>
+      {/* Email Address */}
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
+          Email Address
+        </label>
+        <div className="w-2/3">
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Enter email address"
+            className={`w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.email ? "border-red-500" : ""}`}
+          />
+          {errors.email && <p className="mt-1 text-red-500">{errors.email}</p>}
+        </div>
+      </div>
+      {/* Address */}
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">Address</label>
+        <div className="w-2/3">
+          <textarea
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            placeholder="Enter address"
+            maxLength={500}
+            className={`h-20 w-full resize-none rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.address ? "border-red-500" : ""}`}
+          />
+          {errors.address && (
+            <p className="mt-1 text-red-500">{errors.address}</p>
+          )}
+        </div>
+      </div>
+      {/* Assigned Engineer */}
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
+          Assigned Engineer
+        </label>
+        <div className="w-2/3">
+          <select
+            name="engineer"
+            value={formData.engineer}
+            onChange={handleChange}
+            className={`w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.engineer ? "border-red-500" : ""}`}
+          >
+            {formData.engineerPicker.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          {errors.engineer && (
+            <p className="mt-1 text-red-500">{errors.engineer}</p>
+          )}
+        </div>
+      </div>
+      {/* Mode of Contact */}
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
+          Mode of Contact
+        </label>
+        <div className="w-2/3">
+          <select
+            name="moc"
+            value={formData.moc}
+            onChange={handleChange}
+            className={`w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.moc ? "border-red-500" : ""}`}
+          >
+            {formData.mocPicker.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          {errors.moc && <p className="mt-1 text-red-500">{errors.moc}</p>}
+        </div>
+      </div>
+      {/* In Date */}
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">In Date</label>
+        <div className="w-2/3">
+          <DatePicker
+            selected={parse(formData.inDate, "dd/MM/yyyy", new Date())}
+            onChange={(date) =>
+              handleChange({
+                target: { name: "inDate", value: format(date, "dd/MM/yyyy") },
+              })
+            }
+            dateFormat="dd/MM/yyyy"
+            showYearDropdown
+            className="w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0"
+            placeholderText="Select in date"
+          />
+          {errors.inDate && (
+            <p className="mt-1 text-red-500">{errors.inDate}</p>
+          )}
+        </div>
+      </div>
+      {/* Out Date */}
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">Out Date</label>
+        <div className="w-2/3">
+          <DatePicker
+            selected={parse(formData.outDate, "dd/MM/yyyy", new Date())}
+            onChange={(date) =>
+              handleChange({
+                target: { name: "outDate", value: format(date, "dd/MM/yyyy") },
+              })
+            }
+            dateFormat="dd/MM/yyyy"
+            showYearDropdown
+            className="w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0"
+            placeholderText="Select out date"
+          />
+          {errors.outDate && (
+            <p className="mt-1 text-red-500">{errors.outDate}</p>
+          )}
+        </div>
+      </div>
     </div>
   </div>
 );
@@ -147,82 +234,182 @@ const ProductDetails = ({ formData, errors, handleChange }) => (
   <div className="w-full rounded-lg border-2 border-[#1a365d] p-4 lg:w-1/2">
     <SectionHeader title="Product Details" />
     <div className="mt-4 space-y-4">
-      <SelectField
-        label="Asset Type"
-        name="assets"
-        value={formData.assets}
-        onChange={handleChange}
-        options={formData.assetsPicker}
-        error={errors.assets}
-      />
-      <SelectField
-        label="Product Make"
-        name="productMake"
-        value={formData.productMake}
-        onChange={handleChange}
-        options={formData.productPicker}
-        error={errors.productMake}
-      />
-      <Input
-        label="Serial Number"
-        name="serialNo"
-        value={formData.serialNo}
-        onChange={handleChange}
-        error={errors.serialNo}
-        placeholder="Enter serial number"
-      />
-      <TextareaField
-        label="Description"
-        name="description"
-        value={formData.description}
-        onChange={handleChange}
-        error={errors.description}
-        placeholder="Enter description"
-        maxLength={500}
-      />
-      <SelectField
-        label="Fault Type"
-        name="faultType"
-        value={formData.faultType}
-        onChange={handleChange}
-        options={formData.faultPicker}
-        error={errors.faultType}
-      />
-      <TextareaField
-        label="Fault Description"
-        name="faultDesc"
-        value={formData.faultDesc}
-        onChange={handleChange}
-        error={errors.faultDesc}
-        placeholder="Enter fault description"
-        maxLength={1500}
-      />
-      <SelectField
-        label="Job Status"
-        name="jobStatus"
-        value={formData.jobStatus}
-        onChange={handleChange}
-        options={formData.jobStatusPicker}
-        error={errors.jobStatus}
-      />
-      <TextareaField
-        label="Solution Provided"
-        name="solutionProvided"
-        value={formData.solutionProvided}
-        onChange={handleChange}
-        error={errors.solutionProvided}
-        placeholder="Enter solution provided"
-        maxLength={1500}
-      />
-      <Input
-        label="Amount"
-        name="amount"
-        value={formData.amount}
-        onChange={handleChange}
-        error={errors.amount}
-        type="number"
-        placeholder="Enter amount"
-      />
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
+          Asset Type
+        </label>
+        <div className="w-2/3">
+          <select
+            name="assets"
+            value={formData.assets}
+            onChange={handleChange}
+            className={`w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.assets ? "border-red-500" : ""}`}
+          >
+            {formData.assetsPicker.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          {errors.assets && (
+            <p className="mt-1 text-red-500">{errors.assets}</p>
+          )}
+        </div>
+      </div>
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
+          Product Make
+        </label>
+        <div className="w-2/3">
+          <select
+            name="productMake"
+            value={formData.productMake}
+            onChange={handleChange}
+            className={`w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.productMake ? "border-red-500" : ""}`}
+          >
+            {formData.productPicker.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          {errors.productMake && (
+            <p className="mt-1 text-red-500">{errors.productMake}</p>
+          )}
+        </div>
+      </div>
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
+          Serial Number
+        </label>
+        <div className="w-2/3">
+          <input
+            type="text"
+            name="serialNo"
+            value={formData.serialNo}
+            onChange={handleChange}
+            placeholder="Enter serial number"
+            className={`w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.serialNo ? "border-red-500" : ""}`}
+          />
+          {errors.serialNo && (
+            <p className="mt-1 text-red-500">{errors.serialNo}</p>
+          )}
+        </div>
+      </div>
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
+          Description
+        </label>
+        <div className="w-2/3">
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            placeholder="Enter description"
+            maxLength={500}
+            className={`h-20 w-full resize-none rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.description ? "border-red-500" : ""}`}
+          />
+          {errors.description && (
+            <p className="mt-1 text-red-500">{errors.description}</p>
+          )}
+        </div>
+      </div>
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
+          Fault Type
+        </label>
+        <div className="w-2/3">
+          <select
+            name="faultType"
+            value={formData.faultType}
+            onChange={handleChange}
+            className={`w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.faultType ? "border-red-500" : ""}`}
+          >
+            {formData.faultPicker.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          {errors.faultType && (
+            <p className="mt-1 text-red-500">{errors.faultType}</p>
+          )}
+        </div>
+      </div>
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
+          Fault Description
+        </label>
+        <div className="w-2/3">
+          <textarea
+            name="faultDesc"
+            value={formData.faultDesc}
+            onChange={handleChange}
+            placeholder="Enter fault description"
+            maxLength={1500}
+            className={`h-20 w-full resize-none rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.faultDesc ? "border-red-500" : ""}`}
+          />
+          {errors.faultDesc && (
+            <p className="mt-1 text-red-500">{errors.faultDesc}</p>
+          )}
+        </div>
+      </div>
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
+          Job Status
+        </label>
+        <div className="w-2/3">
+          <select
+            name="jobStatus"
+            value={formData.jobStatus}
+            onChange={handleChange}
+            className={`w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.jobStatus ? "border-red-500" : ""}`}
+          >
+            {formData.jobStatusPicker.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          {errors.jobStatus && (
+            <p className="mt-1 text-red-500">{errors.jobStatus}</p>
+          )}
+        </div>
+      </div>
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
+          Solution Provided
+        </label>
+        <div className="w-2/3">
+          <textarea
+            name="solutionProvided"
+            value={formData.solutionProvided}
+            onChange={handleChange}
+            placeholder="Enter solution provided"
+            maxLength={1500}
+            className={`h-20 w-full resize-none rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.solutionProvided ? "border-red-500" : ""}`}
+          />
+          {errors.solutionProvided && (
+            <p className="mt-1 text-red-500">{errors.solutionProvided}</p>
+          )}
+        </div>
+      </div>
+      <div className="my-3 flex w-full items-center">
+        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">Amount</label>
+        <div className="w-2/3">
+          <input
+            type="number"
+            name="amount"
+            value={formData.amount}
+            onChange={handleChange}
+            placeholder="Enter amount"
+            className={`w-full rounded-md border border-slate-800 px-2 py-1 focus:border-slate-800 focus:ring-0 ${errors.amount ? "border-red-500" : ""}`}
+          />
+          {errors.amount && (
+            <p className="mt-1 text-red-500">{errors.amount}</p>
+          )}
+        </div>
+      </div>
     </div>
   </div>
 );

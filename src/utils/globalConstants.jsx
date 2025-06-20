@@ -1,5 +1,5 @@
 /* ================ API Base URL ================ */
-const BASE_URL = "http://localhost:7000";
+const BASE_URL = "http://65.0.242.84:7000";
 
 /* ================ Cookie Constants ================ */
 export const COOKIE_TIME = 3 / 24; // 3 hours in days

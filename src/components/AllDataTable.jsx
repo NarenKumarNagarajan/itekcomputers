@@ -9,6 +9,7 @@ import {
   TABLE_HEADERS,
   JOB_STATUS_COLORS,
   EDIT_JOB_URL,
+  PICKERS_URL,
 } from "../utils/globalConstants";
 import JobDetailPopUp from "./JobDetailPopUp";
 
@@ -43,7 +44,7 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
   useEffect(() => {
     const fetchStatusOptions = async () => {
       try {
-        const response = await fetch("http://localhost:7000/jobSheetPickers", {
+        const response = await fetch(PICKERS_URL, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwtToken}`,

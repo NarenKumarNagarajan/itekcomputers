@@ -9,7 +9,6 @@ import { toggleSidebar } from "../redux/sidebarSlice";
 import logo from "../images/logo.png";
 import { removeUser } from "../redux/loginSlice";
 import { LOGOUT_URL } from "../utils/globalConstants";
-import Button from "./common/Button";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -76,13 +75,13 @@ const Header = () => {
         </h1>
 
         <div className="text-right">
-          <Button
+          <button
             onClick={handleLogout}
-            className="w-auto"
-            icon={<IoPower size={20} />}
+            className="flex w-auto items-center justify-center gap-2 rounded-full border-2 border-white bg-[#1a365d] px-2 py-1 text-white transition-colors hover:bg-white hover:text-[#1a365d]"
           >
+            <IoPower size={14} />
             Logout
-          </Button>
+          </button>
         </div>
       </header>
     </>

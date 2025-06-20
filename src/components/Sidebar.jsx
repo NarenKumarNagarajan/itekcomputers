@@ -35,20 +35,17 @@ const Sidebar = () => {
   };
 
   const renderMenuItem = (menuItem) => {
-    const isActive =
-      activeMenu === menuItem.title.toLowerCase().replace(" ", "");
     return (
       <div key={menuItem.title} className="bg-[#1a365d]">
         <Link
           to={menuItem.link}
-          className={`flex items-center gap-2 rounded-lg px-4 py-2 text-white transition-colors ${
+          className={`flex items-center rounded-lg px-3 py-2 text-white transition-colors ${
             location.pathname === menuItem.link
               ? "border-r-4 border-l-4 border-[#1a365d] bg-white text-[#1a365d]"
               : "hover:border-r-4 hover:border-l-4 hover:border-[#1a365d] hover:bg-white hover:text-[#1a365d]"
           }`}
           onClick={() => handleMenuClick(menuItem)}
         >
-          {menuItem.icon}
           <span
             className={
               location.pathname === menuItem.link
@@ -69,7 +66,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="z-10 hidden h-auto min-h-screen w-[230px] flex-col justify-between overflow-y-auto bg-[#1a365d] text-[#ffffff] lg:flex">
+      <div className="z-10 hidden h-auto min-h-screen w-[180px] flex-col justify-between overflow-y-auto bg-[#1a365d] text-[#ffffff] lg:flex">
         <ul className="bg-[#1a365d]">
           {position === "ADMIN"
             ? ADMIN_MENU_ITEMS.map(renderMenuItem)

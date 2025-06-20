@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { BiSolidHide, BiSolidShow } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
 import {
   CREATE_USER_URL,
   PASSWORD_VALIDATIONS,
@@ -55,7 +54,6 @@ const CreateUser = () => {
       });
       return false;
     }
-
     // Password validation
     const password = credentials.newPassword;
     const hasUpperCase = PASSWORD_VALIDATIONS.HAS_UPPERCASE.test(password);
@@ -63,7 +61,6 @@ const CreateUser = () => {
     const hasNumbers = PASSWORD_VALIDATIONS.HAS_NUMBERS.test(password);
     const hasSpecialChar = PASSWORD_VALIDATIONS.HAS_SPECIAL_CHAR.test(password);
     const isLongEnough = password.length >= PASSWORD_VALIDATIONS.MIN_LENGTH;
-
     if (!isLongEnough) {
       setMessage({
         errorMsg: "Password must be at least 6 characters long",
@@ -100,7 +97,6 @@ const CreateUser = () => {
       });
       return false;
     }
-
     return true;
   };
 
@@ -110,10 +106,8 @@ const CreateUser = () => {
       setMessage({ errorMsg: "Unauthorized access", successMsg: "" });
       return;
     }
-
     setIsLoading(true);
     setMessage({ errorMsg: "", successMsg: "" });
-
     try {
       const response = await fetch(CREATE_USER_URL, {
         method: "POST",
@@ -128,9 +122,7 @@ const CreateUser = () => {
           userId,
         }),
       });
-
       const result = await response.json();
-
       if (response.ok) {
         setMessage({ errorMsg: "", successMsg: result.message });
         setCredentials({
@@ -187,7 +179,6 @@ const CreateUser = () => {
                 placeholder="User Name"
               />
             </div>
-
             {/* Name */}
             <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
               <label className="text-left text-xl font-bold text-white">
@@ -202,7 +193,6 @@ const CreateUser = () => {
                 placeholder="Name"
               />
             </div>
-
             {/* Password */}
             <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
               <label className="text-left text-xl font-bold text-white">
@@ -218,7 +208,7 @@ const CreateUser = () => {
                   placeholder="Password"
                 />
                 <span
-                  className="absolute inset-y-0 right-3 flex cursor-pointer items-center text-black"
+                  className="absolute inset-y-0 right-3 flex cursor-pointer items-center"
                   onClick={() => handleVisibilityToggle("password")}
                 >
                   {visibility.password ? (
@@ -229,7 +219,6 @@ const CreateUser = () => {
                 </span>
               </div>
             </div>
-
             {/* Transaction Password */}
             <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
               <label className="text-left text-xl font-bold text-white">
@@ -245,7 +234,7 @@ const CreateUser = () => {
                   placeholder="Transaction Password"
                 />
                 <span
-                  className="absolute inset-y-0 right-3 flex cursor-pointer items-center text-black"
+                  className="absolute inset-y-0 right-3 flex cursor-pointer items-center"
                   onClick={() => handleVisibilityToggle("tPassword")}
                 >
                   {visibility.tPassword ? (
@@ -256,18 +245,6 @@ const CreateUser = () => {
                 </span>
               </div>
             </div>
-
-            {/* Submit Button */}
-            <div className="mt-4 flex items-center justify-center">
-              <button
-                onClick={handleSubmit}
-                disabled={isLoading}
-                className="flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-[#1a365d] px-3 py-1.5 text-sm font-bold text-white transition-colors hover:bg-white hover:text-[#1a365d] disabled:opacity-50"
-              >
-                {isLoading ? "Creating..." : "Create"}
-              </button>
-            </div>
-
             {/* Password Requirements */}
             <div className="mt-6 text-sm text-white">
               <p className="mb-2 font-bold">Password Requirements:</p>
@@ -276,6 +253,17 @@ const CreateUser = () => {
                   <li key={index}>{requirement}</li>
                 ))}
               </ul>
+            </div>
+            {/* Submit Button */}
+            <div className="mt-4 flex items-center justify-center">
+              <button
+                type="button"
+                disabled={isLoading}
+                onClick={handleSubmit}
+                className="flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-[#1a365d] px-3 py-1.5 text-sm font-bold text-white transition-colors hover:bg-white hover:text-[#1a365d] disabled:opacity-50"
+              >
+                {isLoading ? "Creating..." : "Create"}
+              </button>
             </div>
           </form>
         </div>
