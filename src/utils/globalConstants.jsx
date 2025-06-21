@@ -4,21 +4,6 @@ const BASE_URL = "http://65.0.242.84:7000";
 /* ================ Cookie Constants ================ */
 export const COOKIE_TIME = 3 / 24; // 3 hours in days
 
-/* ================ Status Colors ================ */
-export const JOB_STATUS_COLORS = {
-  "Service Pending": "bg-red-500",
-  "Approval Pending": "bg-yellow-300",
-  "Chiplevel Pending": "bg-purple-300",
-  "Delivery Pending": "bg-indigo-300",
-  "Cash Pending": "bg-pink-300",
-  "Return Pending": "bg-orange-300",
-  "Warranty Service": "bg-gray-500",
-  Returned: "bg-purple-300",
-  Completed: "bg-green-500",
-  "In Progress": "bg-blue-500",
-  Default: "bg-gray-300",
-};
-
 /* ================ Authentication URLs ================ */
 export const LOGIN_URL = `${BASE_URL}/login`;
 export const LOGOUT_URL = `${BASE_URL}/logout`;
@@ -83,7 +68,7 @@ export const USER_MENU_ITEMS = [
 
 /* ================ UI Constants ================ */
 export const BUTTON_BASE_STYLE =
-  "flex items-center justify-center gap-2 self-center rounded-full border-2 border-white px-3 py-2 text-sm font-bold text-white transition-colors";
+  "flex items-center justify-center gap-2 self-center rounded-full border-2 border-white px-3 py-2 text-white transition-colors";
 
 export const BUTTON_COLORS = {
   PRIMARY: {
@@ -91,19 +76,13 @@ export const BUTTON_COLORS = {
     hover: "hover:border-[#1a365d] hover:bg-white hover:text-[#1a365d]",
   },
   SUCCESS: {
-    base: "bg-[#16a34a]",
-    hover: "hover:border-[#16a34a] hover:bg-white hover:text-[#16a34a]",
+    base: "bg-orange-500",
+    hover: "hover:border-orange-500 hover:bg-white hover:text-orange-500",
   },
   DANGER: {
     base: "bg-[#dc2626]",
     hover: "hover:border-[#dc2626] hover:bg-white hover:text-[#dc2626]",
   },
-};
-
-export const BUTTON_SIZES = {
-  SMALL: "w-[100px]",
-  MEDIUM: "w-[150px]",
-  LARGE: "w-[200px]",
 };
 
 /* ================ Table Headers ================ */

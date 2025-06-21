@@ -11,11 +11,7 @@ import {
   EDIT_JOB_URL,
   PICKERS_URL,
 } from "../utils/globalConstants";
-import {
-  BUTTON_BASE_STYLE,
-  BUTTON_SIZES,
-  BUTTON_COLORS,
-} from "../utils/globalConstants";
+import { BUTTON_BASE_STYLE, BUTTON_COLORS } from "../utils/globalConstants";
 
 const EditPage = () => {
   const location = useLocation();
@@ -178,9 +174,7 @@ const EditPage = () => {
       )}
       {message.successMsg && (
         <div className="mb-4 rounded-lg bg-green-100 p-4 text-center">
-          <p className="text-lg font-bold text-green-700">
-            {message.successMsg}
-          </p>
+          <p className="text-green-700">{message.successMsg}</p>
         </div>
       )}
       <form onSubmit={(e) => e.preventDefault()}>
@@ -239,9 +233,7 @@ const EditPage = () => {
             />
 
             <div className="my-3 flex w-full items-center">
-              <label className="mr-2 w-1/3 text-xl font-bold text-[#1a365d]">
-                In Date
-              </label>
+              <label className="mr-2 w-1/3 text-[#1a365d]">In Date</label>
               <div className="w-2/3">
                 <DatePicker
                   selected={parse(formData.inDate, "dd/MM/yyyy", new Date())}
@@ -255,9 +247,7 @@ const EditPage = () => {
             </div>
 
             <div className="my-3 flex w-full items-center">
-              <label className="mr-2 w-1/3 text-xl font-bold text-[#1a365d]">
-                Out Date
-              </label>
+              <label className="mr-2 w-1/3 text-[#1a365d]">Out Date</label>
               <div className="w-2/3">
                 <DatePicker
                   selected={parse(formData.outDate, "dd/MM/yyyy", new Date())}
@@ -360,7 +350,7 @@ const EditPage = () => {
         <div className="mt-8 flex justify-center space-x-4">
           <button
             type="submit"
-            className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover} whitespace-nowrap`}
+            className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover} whitespace-nowrap`}
             onClick={() => onFormSubmit("save")}
           >
             Save
@@ -368,7 +358,7 @@ const EditPage = () => {
 
           <button
             type="submit"
-            className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover} whitespace-nowrap`}
+            className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover} whitespace-nowrap`}
             onClick={() => onFormSubmit("saveAndPdf")}
           >
             Save & Print
@@ -380,16 +370,14 @@ const EditPage = () => {
 };
 
 const SectionHeader = ({ title }) => (
-  <h1 className="w-full border-2 border-[#1a365d] bg-[#1a365d] p-2 text-xl font-bold text-white">
+  <h1 className="w-full border-2 border-[#1a365d] bg-[#1a365d] p-2 text-white">
     {title}
   </h1>
 );
 
 const InputField = ({ labelName, name, value, handleChange, placeholder }) => (
   <div className="my-3 flex w-full items-center">
-    <label className="mr-2 w-1/3 text-xl font-bold text-[#1a365d]">
-      {labelName}
-    </label>
+    <label className="mr-2 w-1/3 text-[#1a365d]">{labelName}</label>
     <input
       type="text"
       name={name}
@@ -410,9 +398,7 @@ const TextareaField = ({
   maxLength,
 }) => (
   <div className="my-3 flex w-full items-center">
-    <label className="mr-2 w-1/3 text-xl font-bold text-[#1a365d]">
-      {labelName}
-    </label>
+    <label className="mr-2 w-1/3 text-[#1a365d]">{labelName}</label>
     <textarea
       name={name}
       value={value}
@@ -435,9 +421,7 @@ const SelectField = ({
 
   return (
     <div className="my-3 flex w-full items-center">
-      <label className="mr-2 w-1/3 text-xl font-bold text-[#1a365d]">
-        {labelName}
-      </label>
+      <label className="mr-2 w-1/3 text-[#1a365d]">{labelName}</label>
       <select
         name={name}
         value={value}

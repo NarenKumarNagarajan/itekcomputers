@@ -7,7 +7,6 @@ import {
   DATA_BY_JOB_ID_URL,
   BUTTON_BASE_STYLE,
   BUTTON_COLORS,
-  BUTTON_SIZES,
 } from "../utils/globalConstants";
 
 const JobDetailPopUp = ({ selectedJobID, closePopup, isPopupOpen }) => {
@@ -52,7 +51,7 @@ const JobDetailPopUp = ({ selectedJobID, closePopup, isPopupOpen }) => {
   return (
     <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-gray-900">
       <div className="h-[90vh] w-[80%] overflow-auto rounded-lg bg-white p-4 shadow-lg">
-        <h2 className="mb-4 text-center text-2xl font-bold">Job Details</h2>
+        <h2 className="mb-4 text-center text-2xl">Job Details</h2>
 
         {/* Flex container to hold two tables side by side */}
         <div className="flex w-full">
@@ -60,67 +59,47 @@ const JobDetailPopUp = ({ selectedJobID, closePopup, isPopupOpen }) => {
           <table className="mr-1 w-[50%] border-collapse border border-gray-400">
             <tbody>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
-                  JOB ID
-                </td>
+                <td className="border bg-[#1a365d] p-2 text-white">JOB ID</td>
                 <td className="border p-2">{selectedJobID}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
-                  NAME
-                </td>
+                <td className="border bg-[#1a365d] p-2 text-white">NAME</td>
                 <td className="border p-2">{dataByJobID.NAME}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
-                  MOBILE
-                </td>
+                <td className="border bg-[#1a365d] p-2 text-white">MOBILE</td>
                 <td className="border p-2">{dataByJobID.MOBILE}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
-                  EMAIL
-                </td>
+                <td className="border bg-[#1a365d] p-2 text-white">EMAIL</td>
                 <td className="border p-2">{dataByJobID.EMAIL}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
-                  ADDRESS
-                </td>
+                <td className="border bg-[#1a365d] p-2 text-white">ADDRESS</td>
                 <td className="border p-2">{dataByJobID.ADDRESS}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
-                  ENGINEER
-                </td>
+                <td className="border bg-[#1a365d] p-2 text-white">ENGINEER</td>
                 <td className="border p-2">{dataByJobID.ENGINEER}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
-                  MOC
-                </td>
+                <td className="border bg-[#1a365d] p-2 text-white">MOC</td>
                 <td className="border p-2">{dataByJobID.MOC}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
-                  IN DATE
-                </td>
+                <td className="border bg-[#1a365d] p-2 text-white">IN DATE</td>
                 <td className="border p-2">{dataByJobID.IN_DATE}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
-                  OUT DATE
-                </td>
+                <td className="border bg-[#1a365d] p-2 text-white">OUT DATE</td>
                 <td className="border p-2">{dataByJobID.OUT_DATE}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
-                  ASSETS
-                </td>
+                <td className="border bg-[#1a365d] p-2 text-white">ASSETS</td>
                 <td className="border p-2">{dataByJobID.ASSETS}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
+                <td className="border bg-[#1a365d] p-2 text-white">
                   CREATED BY
                 </td>
                 <td className="border p-2">{dataByJobID.CREATED}</td>
@@ -132,61 +111,57 @@ const JobDetailPopUp = ({ selectedJobID, closePopup, isPopupOpen }) => {
           <table className="w-[50%] border-collapse border border-gray-400">
             <tbody>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
+                <td className="border bg-[#1a365d] p-2 text-white">
                   PRODUCT MAKE
                 </td>
                 <td className="border p-2">{dataByJobID.PRODUCT_MAKE}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
+                <td className="border bg-[#1a365d] p-2 text-white">
                   DESCRIPTION
                 </td>
                 <td className="border p-2">{dataByJobID.DESCRIPTION}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
+                <td className="border bg-[#1a365d] p-2 text-white">
                   SERIAL NO
                 </td>
                 <td className="border p-2">{dataByJobID.SERIAL_NO}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
+                <td className="border bg-[#1a365d] p-2 text-white">
                   FAULT TYPE
                 </td>
                 <td className="border p-2">{dataByJobID.FAULT_TYPE}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
+                <td className="border bg-[#1a365d] p-2 text-white">
                   FAULT DESC
                 </td>
                 <td className="border p-2">{dataByJobID.FAULT_DESC}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
+                <td className="border bg-[#1a365d] p-2 text-white">
                   JOB STATUS
                 </td>
                 <td className="border p-2">{dataByJobID.JOB_STATUS}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
-                  AMOUNT
-                </td>
+                <td className="border bg-[#1a365d] p-2 text-white">AMOUNT</td>
                 <td className="border p-2">{dataByJobID.AMOUNT}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
+                <td className="border bg-[#1a365d] p-2 text-white">
                   SOLUTION PROVIDED
                 </td>
                 <td className="border p-2">{dataByJobID.SOLUTION_PROVIDED}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
-                  EXPENSE
-                </td>
+                <td className="border bg-[#1a365d] p-2 text-white">EXPENSE</td>
                 <td className="border p-2">{dataByJobID.PURCHASE_AMOUNT}</td>
               </tr>
               <tr>
-                <td className="border bg-[#1a365d] p-2 font-bold text-white">
+                <td className="border bg-[#1a365d] p-2 text-white">
                   LAST MODIFIED BY
                 </td>
                 <td className="border p-2">{dataByJobID.LAST_MODIFIED}</td>
@@ -196,13 +171,13 @@ const JobDetailPopUp = ({ selectedJobID, closePopup, isPopupOpen }) => {
         </div>
         <div className="mt-4 flex justify-center space-x-10">
           <button
-            className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
+            className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
             onClick={handlePrint}
           >
             Print
           </button>
           <button
-            className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+            className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
             onClick={closePopup}
           >
             Close

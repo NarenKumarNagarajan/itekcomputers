@@ -175,25 +175,23 @@ const ChangePassword = () => {
     <div className="flex-1 overflow-auto p-4">
       {message.errorMsg && (
         <div className="mb-4 rounded-lg bg-red-100 p-4 text-center text-red-700">
-          <p className="font-bold">{message.errorMsg}</p>
+          <p className="">{message.errorMsg}</p>
         </div>
       )}
       {message.successMsg && (
         <div className="mb-4 rounded-lg bg-green-100 p-4 text-center text-green-700">
-          <p className="font-bold">{message.successMsg}</p>
+          <p className="">{message.successMsg}</p>
         </div>
       )}
       <div className="flex w-full justify-center">
         <div className="flex w-full flex-col items-center lg:w-2/3">
           <form
-            className="w-full rounded-lg bg-[#1a365d] p-4 font-bold text-white"
+            className="w-full rounded-lg bg-[#1a365d] p-4 text-white"
             onSubmit={onFormSubmit}
           >
             {/* Password Type Selection */}
             <div className="mb-4 grid w-full grid-cols-[180px_1fr] items-center gap-2">
-              <label className="text-left text-xl font-bold text-white">
-                Change Type
-              </label>
+              <label className="text-left text-white">Change Type</label>
               <select
                 value={passwordType}
                 onChange={(e) => setPasswordType(e.target.value)}
@@ -206,7 +204,7 @@ const ChangePassword = () => {
 
             {/* Old Password */}
             <div className="mb-4 grid w-full grid-cols-[180px_1fr] items-center gap-2">
-              <label className="text-left text-xl font-bold text-white">
+              <label className="text-left text-white">
                 Old {passwordType === "password" ? "Password" : "T. Password"}
               </label>
               <div className="relative w-full">
@@ -233,7 +231,7 @@ const ChangePassword = () => {
 
             {/* New Password */}
             <div className="mb-4 grid w-full grid-cols-[180px_1fr] items-center gap-2">
-              <label className="text-left text-xl font-bold text-white">
+              <label className="text-left text-white">
                 New {passwordType === "password" ? "Password" : "T. Password"}
               </label>
               <div className="relative w-full">
@@ -260,7 +258,7 @@ const ChangePassword = () => {
 
             {/* Confirm Password */}
             <div className="mb-4 grid w-full grid-cols-[180px_1fr] items-center gap-2">
-              <label className="text-left text-xl font-bold text-white">
+              <label className="text-left text-white">
                 Confirm{" "}
                 {passwordType === "password" ? "Password" : "T. Password"}
               </label>
@@ -291,15 +289,15 @@ const ChangePassword = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-[#1a365d] px-3 py-1.5 text-sm font-bold text-white transition-colors hover:bg-white hover:text-[#1a365d] disabled:opacity-50"
+                className="flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-[#1a365d] px-3 py-1.5 text-white transition-colors hover:bg-white hover:text-[#1a365d] disabled:opacity-50"
               >
                 {loading ? "Changing..." : "Change"}
               </button>
             </div>
 
             {/* Password Requirements */}
-            <div className="mt-6 text-sm text-white">
-              <p className="mb-2 font-bold">Password Requirements:</p>
+            <div className="mt-6 text-white">
+              <p className="mb-2">Password Requirements:</p>
               <ul className="list-inside list-disc space-y-1">
                 {PASSWORD_REQUIREMENTS.map((requirement, index) => (
                   <li key={index}>{requirement}</li>

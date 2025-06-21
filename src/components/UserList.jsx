@@ -5,7 +5,6 @@ import {
   USER_LIST_URL,
   BUTTON_BASE_STYLE,
   BUTTON_COLORS,
-  BUTTON_SIZES,
 } from "../utils/globalConstants";
 import { useSelector } from "react-redux";
 
@@ -100,18 +99,18 @@ const UserList = () => {
     <div className="flex-1 overflow-auto p-4">
       {message.errorMsg && (
         <div className="mb-4 rounded-lg bg-red-100 p-4 text-center text-red-700">
-          <p className="font-bold">{message.errorMsg}</p>
+          <p className="">{message.errorMsg}</p>
         </div>
       )}
       {message.successMsg && (
         <div className="mb-4 rounded-lg bg-green-100 p-4 text-center text-green-700">
-          <p className="font-bold">{message.successMsg}</p>
+          <p className="">{message.successMsg}</p>
         </div>
       )}
       <div className="mt-4 overflow-auto">
         <table className="w-full border border-gray-300">
           <thead>
-            <tr className="bg-[#1a365d] text-center font-bold text-white">
+            <tr className="bg-[#1a365d] text-center text-white">
               {tableHead.map((head, index) => (
                 <th key={index} className="border border-gray-300 px-2 py-1">
                   {head}
@@ -142,7 +141,7 @@ const UserList = () => {
                     <div className="flex justify-center gap-4">
                       <button
                         onClick={() => handleResetPassword(user.USERNAME)}
-                        className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
+                        className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
                       >
                         Reset Pwd
                       </button>
@@ -152,7 +151,7 @@ const UserList = () => {
                             setSelectedUsername(user.USERNAME);
                             setIsDeletePopupOpen(true);
                           }}
-                          className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+                          className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
                         >
                           Delete
                         </button>
@@ -176,14 +175,14 @@ const UserList = () => {
       {isDeletePopupOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1a365d]/50">
           <div className="rounded-lg bg-white p-4 shadow-lg">
-            <h2 className="mb-4 text-center text-xl font-bold">Delete User</h2>
+            <h2 className="mb-4 text-center">Delete User</h2>
             <p className="mb-6 text-center">
               Are you sure you want to delete user &quot;{selectedUsername}
               &quot;?
             </p>
             <div className="flex justify-center space-x-4">
               <button
-                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
+                className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
                 onClick={() => {
                   handleDeleteUser(selectedUsername);
                   setIsDeletePopupOpen(false);
@@ -192,7 +191,7 @@ const UserList = () => {
                 Delete
               </button>
               <button
-                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+                className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
                 onClick={() => setIsDeletePopupOpen(false)}
               >
                 Close

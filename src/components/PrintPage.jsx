@@ -1,11 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import {
-  BUTTON_BASE_STYLE,
-  BUTTON_SIZES,
-  BUTTON_COLORS,
-} from "../utils/globalConstants";
+import { BUTTON_BASE_STYLE, BUTTON_COLORS } from "../utils/globalConstants";
 
 import logo from "../images/logo.png";
 import { IoIosMail, IoIosCall } from "react-icons/io";
@@ -105,7 +101,7 @@ const PrintPage = () => {
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="text-xl">Loading...</div>
+        <div className="">Loading...</div>
       </div>
     );
   }
@@ -113,9 +109,7 @@ const PrintPage = () => {
   return (
     <div className="flex-1 overflow-auto p-4">
       <div className="bg-purple-300">
-        {errorMsg && (
-          <div className="text-xl font-bold text-red-600">{errorMsg}</div>
-        )}
+        {errorMsg && <div className="text-red-600">{errorMsg}</div>}
         {jobDetails && (
           <div className="bg-white p-1" ref={componentRef}>
             <div className="border-2 border-black">
@@ -125,7 +119,7 @@ const PrintPage = () => {
                 </div>
 
                 <div className="ml-5 flex-1 text-center">
-                  <h1 className="font-bold">LAPTOP | DESKTOP | CCTV</h1>
+                  <h1 className="">LAPTOP | DESKTOP | CCTV</h1>
                   <p>
                     # No: 9, Rajiv Gandhi Salai, OMR, Kandhanchavadi, Perungudi,
                     <br />
@@ -144,14 +138,14 @@ const PrintPage = () => {
                 </div>
               </div>
 
-              <h1 className="border-b-2 border-black p-1 text-center text-xl font-bold">
+              <h1 className="border-b-2 border-black p-1 text-center">
                 JOB SHEET
               </h1>
 
               <div className="flex items-center justify-between border-b-2 border-black px-6">
                 <div className="w-1/2 border-r-2 border-black text-left">
                   <p className="flex">
-                    <span className="font-courier w-[100px] border-r-2 border-black py-1 text-lg font-bold">
+                    <span className="font-courier w-[100px] border-r-2 border-black py-1">
                       Job No
                     </span>
                     <span className="flex-grow border-b-2 border-black py-1 pl-2">
@@ -159,7 +153,7 @@ const PrintPage = () => {
                     </span>
                   </p>
                   <p className="flex">
-                    <span className="font-courier w-[100px] border-r-2 border-black py-1 text-lg font-bold">
+                    <span className="font-courier w-[100px] border-r-2 border-black py-1">
                       Engineer
                     </span>
                     <span className="py-1 pl-2">{jobDetails.ENGINEER}</span>
@@ -167,84 +161,80 @@ const PrintPage = () => {
                 </div>
                 <div className="w-1/2 py-2 text-right">
                   <p>
-                    <span className="font-courier text-lg font-bold">
-                      In Date:
-                    </span>{" "}
+                    <span className="font-courier">In Date:</span>{" "}
                     {jobDetails.IN_DATE}
                   </p>
 
                   <p>
-                    <span className="font-courier text-lg font-bold">
-                      Out Date:
-                    </span>{" "}
+                    <span className="font-courier">Out Date:</span>{" "}
                     {jobDetails.OUT_DATE}
                   </p>
                 </div>
               </div>
 
-              <h1 className="border-b-2 border-black py-2 text-center font-bold">
+              <h1 className="border-b-2 border-black py-2 text-center">
                 CUSTOMER DETAILS
               </h1>
 
               <div className="flex items-start justify-between border-b-2 border-black px-6 text-left">
                 <div className="w-1/2 border-r-2 border-black">
                   <p className="flex">
-                    <span className="font-courier w-[100px] border-r-2 border-black py-1 text-lg font-bold">
+                    <span className="font-courier w-[100px] border-r-2 border-black py-1">
                       Name
                     </span>
                     <span className="py-1 pl-2">{jobDetails.NAME}</span>
                   </p>
                   <p className="flex">
-                    <span className="font-courier w-[100px] border-r-2 border-black pb-1 text-lg font-bold">
+                    <span className="font-courier w-[100px] border-r-2 border-black pb-1">
                       Mobile
                     </span>
                     <span className="pb-1 pl-2">{jobDetails.MOBILE}</span>
                   </p>
                   <p className="flex">
-                    <span className="font-courier w-[100px] border-r-2 border-black pb-1 text-lg font-bold">
+                    <span className="font-courier w-[100px] border-r-2 border-black pb-1">
                       Email
                     </span>
                     <span className="pb-1 pl-2">{jobDetails.EMAIL}</span>
                   </p>
                 </div>
                 <div className="w-1/2 py-1 pl-2">
-                  <p className="font-courier text-lg font-bold">Address:</p>
+                  <p className="font-courier">Address:</p>
                   <p>{jobDetails.ADDRESS}</p>
                 </div>
               </div>
 
-              <h1 className="border-b-2 border-black py-2 text-center font-bold">
+              <h1 className="border-b-2 border-black py-2 text-center">
                 PRODUCT DETAILS
               </h1>
 
               <div className="flex h-full items-stretch justify-between border-b-2 border-black text-left">
                 <div className="flex min-h-full w-1/2 flex-col border-r-2 border-black px-6">
                   <p className="flex">
-                    <span className="font-courier min-h-full w-[150px] border-r-2 border-black py-1 text-lg font-bold">
+                    <span className="font-courier min-h-full w-[150px] border-r-2 border-black py-1">
                       Asset Type
                     </span>
                     <span className="py-1 pl-2">{jobDetails.ASSETS}</span>
                   </p>
                   <p className="flex">
-                    <span className="font-courier w-[150px] border-r-2 border-black pb-1 text-lg font-bold">
+                    <span className="font-courier w-[150px] border-r-2 border-black pb-1">
                       Product Type
                     </span>
                     <span className="pb-1 pl-2">{jobDetails.PRODUCT_MAKE}</span>
                   </p>
                   <p className="flex">
-                    <span className="font-courier w-[150px] border-r-2 border-black pb-1 text-lg font-bold">
+                    <span className="font-courier w-[150px] border-r-2 border-black pb-1">
                       Serial No
                     </span>
                     <span className="pb-1 pl-2">{jobDetails.SERIAL_NO}</span>
                   </p>
                   <p className="flex">
-                    <span className="font-courier w-[150px] border-r-2 border-black pb-1 text-lg font-bold">
+                    <span className="font-courier w-[150px] border-r-2 border-black pb-1">
                       Description
                     </span>
                     <span className="pb-1 pl-2">{jobDetails.DESCRIPTION}</span>
                   </p>
                   <p className="flex flex-grow">
-                    <span className="font-courier w-[150px] border-r-2 border-black pb-1 text-lg font-bold">
+                    <span className="font-courier w-[150px] border-r-2 border-black pb-1">
                       Job Status
                     </span>
                     <span className="pb-1 pl-2">{jobDetails.JOB_STATUS}</span>
@@ -252,14 +242,10 @@ const PrintPage = () => {
                 </div>
                 <div className="w-1/2">
                   <p className="border-b-2 border-black px-2 py-1 text-justify">
-                    <span className="font-courier text-lg font-bold">
-                      Fault Type:{" "}
-                    </span>{" "}
+                    <span className="font-courier">Fault Type: </span>{" "}
                     {jobDetails.FAULT_TYPE}
                   </p>
-                  <h1 className="font-courier px-2 pt-1 text-lg font-bold">
-                    Fault Description:
-                  </h1>
+                  <h1 className="font-courier px-2 pt-1">Fault Description:</h1>
                   <p className="px-2 pb-1 text-justify">
                     {jobDetails.FAULT_DESC}
                   </p>
@@ -267,15 +253,13 @@ const PrintPage = () => {
               </div>
 
               <div className="border-b-2 border-black px-6 py-1">
-                <h1 className="font-courier text-lg font-bold">
-                  Provided Solution:
-                </h1>
+                <h1 className="font-courier">Provided Solution:</h1>
                 <p className="text-justify">{jobDetails.SOLUTION_PROVIDED}</p>
               </div>
 
               <div className="border-b-2 border-black px-6">
-                <p className="flex font-bold">
-                  <span className="font-courier w-[130px] border-r-2 border-black py-1 text-lg">
+                <p className="flex">
+                  <span className="font-courier w-[130px] border-r-2 border-black py-1">
                     AMOUNT
                   </span>
                   <span className="py-1 pl-2">
@@ -283,7 +267,7 @@ const PrintPage = () => {
                   </span>
                 </p>
                 <p className="flex">
-                  <span className="font-courier w-[130px] border-r-2 border-black py-1 text-lg font-bold">
+                  <span className="font-courier w-[130px] border-r-2 border-black py-1">
                     (in words)
                   </span>
                   <span className="py-1 pl-2">
@@ -297,21 +281,19 @@ const PrintPage = () => {
               </div>
 
               <h1 className="border-b-2 border-black px-6 py-1 text-justify">
-                <span className="font-courier text-lg font-bold">
-                  Terms & Conditions:{" "}
-                </span>
+                <span className="font-courier">Terms & Conditions: </span>
                 iTek Computers will not be held responsible or liable for
                 products that are not picked up or delivered within 60 days or
                 two months from the date the job sheet is issued.
               </h1>
 
-              <div className="flex w-full items-stretch justify-between px-6 font-bold">
+              <div className="flex w-full items-stretch justify-between px-6">
                 <div className="flex w-1/2 items-start border-r-2 border-black py-1">
                   <h1>Customer Signature</h1>
                 </div>
                 <div className="flex flex-col justify-between py-1 text-right">
                   <h1>Authorized Signature</h1>
-                  <h1 className="pt-20 font-bold">(iTek Computers)</h1>
+                  <h1 className="pt-20">(iTek Computers)</h1>
                 </div>
               </div>
             </div>
@@ -321,13 +303,13 @@ const PrintPage = () => {
       <div className="mt-4 flex justify-center gap-4">
         <button
           onClick={handlePrint}
-          className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
+          className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
         >
           Print
         </button>
         <button
           onClick={handleBack}
-          className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+          className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
         >
           Back
         </button>

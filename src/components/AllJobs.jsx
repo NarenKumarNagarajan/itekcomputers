@@ -16,7 +16,6 @@ import {
   DEFAULT_STATUS,
   DEFAULT_DATE_FILTER,
   BUTTON_BASE_STYLE,
-  BUTTON_SIZES,
   BUTTON_COLORS,
 } from "../utils/globalConstants";
 import { getDateRange } from "../utils/helperFunc";
@@ -189,25 +188,23 @@ const AllJobs = () => {
     <div className="py-4">
       {message.errorMsg && (
         <div className="mb-4 rounded-lg bg-red-100 p-4 text-center text-red-700">
-          <p className="font-bold">{message.errorMsg}</p>
+          <p>{message.errorMsg}</p>
         </div>
       )}
       {message.successMsg && (
         <div className="mb-4 rounded-lg bg-green-100 p-4 text-center text-green-700">
-          <p className="font-bold">{message.successMsg}</p>
+          <p>{message.successMsg}</p>
         </div>
       )}
       <div className="flex w-full justify-center">
-        <div className="flex w-full flex-col items-center lg:w-2/3">
+        <div className="flex w-full flex-col items-center lg:w-1/3">
           <form
-            className="w-full rounded-lg bg-[#1a365d] p-4 font-bold text-white"
+            className="w-full rounded-lg bg-[#1a365d] p-4 text-white"
             onSubmit={handleSubmit}
           >
             {/* From Date */}
-            <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
-              <label className="text-left text-xl font-bold text-white">
-                From:
-              </label>
+            <div className="mb-2 grid w-full grid-cols-[80px_1fr] items-center gap-2">
+              <label className="text-left text-white">From:</label>
               <DatePicker
                 selected={parse(filters.inDateFrom, "dd/MM/yyyy", new Date())}
                 onChange={handleDateChange("inDateFrom")}
@@ -219,10 +216,8 @@ const AllJobs = () => {
             </div>
 
             {/* To Date */}
-            <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
-              <label className="text-left text-xl font-bold text-white">
-                To:
-              </label>
+            <div className="mb-2 grid w-full grid-cols-[80px_1fr] items-center gap-2">
+              <label className="text-left text-white">To:</label>
               <DatePicker
                 selected={parse(filters.inDateTo, "dd/MM/yyyy", new Date())}
                 onChange={handleDateChange("inDateTo")}
@@ -234,10 +229,8 @@ const AllJobs = () => {
             </div>
 
             {/* Range */}
-            <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
-              <label className="text-left text-xl font-bold text-white">
-                Range:
-              </label>
+            <div className="mb-2 grid w-full grid-cols-[80px_1fr] items-center gap-2">
+              <label className="text-left text-white">Range:</label>
               <select
                 name="rangeSelected"
                 value={filters.rangeSelected}
@@ -253,10 +246,8 @@ const AllJobs = () => {
             </div>
 
             {/* Status */}
-            <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
-              <label className="text-left text-xl font-bold text-white">
-                Status:
-              </label>
+            <div className="mb-2 grid w-full grid-cols-[80px_1fr] items-center gap-2">
+              <label className="text-left text-white">Status:</label>
               <select
                 name="status"
                 value={filters.status}
@@ -274,14 +265,14 @@ const AllJobs = () => {
             </div>
 
             {/* Job Count */}
-            <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
-              <label className="text-left text-xl text-white">Jobs:</label>
-              <p className="text-xl text-white">{allData.length}</p>
+            <div className="mb-4 grid w-full grid-cols-[80px_1fr] items-center gap-2">
+              <label className="text-left text-white">Jobs:</label>
+              <p className="text-white">{allData.length}</p>
             </div>
 
             {/* Submit Button */}
             <div className="mt-4 flex items-center justify-center">
-              <button className="flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-[#1a365d] px-3 py-1.5 text-sm font-bold text-white transition-colors hover:bg-white hover:text-[#1a365d]">
+              <button className="flex items-center justify-center self-center rounded-full border-2 border-white bg-[#1a365d] px-2 py-1 text-white transition-colors hover:bg-white hover:text-[#1a365d]">
                 Submit
               </button>
             </div>
@@ -314,19 +305,19 @@ const AllJobs = () => {
           }}
         >
           <div className="rounded-lg bg-white p-4 shadow-lg">
-            <h2 className="mb-4 text-center text-xl font-bold">Delete Job</h2>
+            <h2 className="mb-4 text-center">Delete Job</h2>
             <p className="mb-6 text-center">
               Are you sure you want to delete this job?
             </p>
             <div className="flex justify-center space-x-4">
               <button
-                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
+                className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
                 onClick={confirmDelete}
               >
                 Delete
               </button>
               <button
-                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+                className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
                 onClick={closeDeletePopup}
               >
                 Close

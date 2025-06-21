@@ -118,25 +118,23 @@ const Insights = () => {
     <div className="flex-1 overflow-auto p-4">
       {message.errorMsg && (
         <div className="mb-4 rounded-lg bg-red-100 p-4 text-center text-red-700">
-          <p className="font-bold">{message.errorMsg}</p>
+          <p className="">{message.errorMsg}</p>
         </div>
       )}
       {message.successMsg && (
         <div className="mb-4 rounded-lg bg-green-100 p-4 text-center text-green-700">
-          <p className="font-bold">{message.successMsg}</p>
+          <p className="">{message.successMsg}</p>
         </div>
       )}
       <div className="flex w-full justify-center">
         <div className="flex w-full flex-col items-center lg:w-2/3">
           <form
-            className="w-full rounded-lg bg-[#1a365d] p-4 font-bold text-white"
+            className="w-full rounded-lg bg-[#1a365d] p-4 text-white"
             onSubmit={handleSubmit}
           >
             {/* From Date */}
             <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
-              <label className="text-left text-xl font-bold text-white">
-                From:
-              </label>
+              <label className="text-left text-white">From:</label>
               <DatePicker
                 selected={parseDate(filters.inDateFrom)}
                 onChange={handleDateChange("inDateFrom")}
@@ -149,9 +147,7 @@ const Insights = () => {
 
             {/* To Date */}
             <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
-              <label className="text-left text-xl font-bold text-white">
-                To:
-              </label>
+              <label className="text-left text-white">To:</label>
               <DatePicker
                 selected={parseDate(filters.inDateTo)}
                 onChange={handleDateChange("inDateTo")}
@@ -164,9 +160,7 @@ const Insights = () => {
 
             {/* Range */}
             <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
-              <label className="text-left text-xl font-bold text-white">
-                Range:
-              </label>
+              <label className="text-left text-white">Range:</label>
               <select
                 name="rangeSelected"
                 value={filters.rangeSelected}
@@ -183,9 +177,7 @@ const Insights = () => {
 
             {/* Transaction Password */}
             <div className="mb-4 grid w-full grid-cols-[120px_1fr] items-center gap-2">
-              <label className="text-left text-xl font-bold text-white">
-                T. Password
-              </label>
+              <label className="text-left text-white">T. Password</label>
               <div className="relative w-full">
                 <input
                   type={visibility.tPassword ? "text" : "password"}
@@ -213,7 +205,7 @@ const Insights = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-[#1a365d] px-3 py-1.5 text-sm font-bold text-white transition-colors hover:bg-white hover:text-[#1a365d] disabled:opacity-50"
+                className="flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-[#1a365d] px-3 py-1.5 text-white transition-colors hover:bg-white hover:text-[#1a365d] disabled:opacity-50"
               >
                 {loading ? "Loading..." : "Submit"}
               </button>

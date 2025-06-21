@@ -3,11 +3,16 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
+  BiSolidShow,
+  BiSolidEdit,
+  BiSolidTrash,
+  BiSolidDownload,
+  BiLogoWhatsapp,
+} from "react-icons/bi";
+import {
   BUTTON_BASE_STYLE,
   BUTTON_COLORS,
-  BUTTON_SIZES,
   TABLE_HEADERS,
-  JOB_STATUS_COLORS,
   EDIT_JOB_URL,
   PICKERS_URL,
 } from "../utils/globalConstants";
@@ -78,8 +83,20 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
     navigate(`/editJob?jobID=${jobID}`);
   };
 
-  const handleDelete = (jobID) => {
-    openDeletePopup(jobID);
+  const handleDelete = (jobId) => {
+    if (window.confirm("Are you sure you want to delete this job?")) {
+      deleteJob(jobId);
+    }
+  };
+
+  const handleDownload = (jobId) => {
+    // TODO: Implement download functionality
+    console.log("Download job:", jobId);
+  };
+
+  const handleWhatsApp = (jobId) => {
+    // TODO: Implement WhatsApp functionality
+    console.log("Send WhatsApp for job:", jobId);
   };
 
   const closePopup = () => {
@@ -92,13 +109,9 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
     setCurrentPage(1); // Reset to first page when searching
   };
 
-  const getStatusColor = (status) => {
-    return JOB_STATUS_COLORS[status] || JOB_STATUS_COLORS.default;
-  };
-
   // Status editing handlers
-  const handleStatusEdit = (jobID, currentStatus) => {
-    setEditingStatus(jobID);
+  const handleStatusEdit = (jobId, currentStatus) => {
+    setEditingStatus(jobId);
   };
 
   const handleStatusChange = async (jobID, newStatus) => {
@@ -216,27 +229,24 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
   }, [search, allData]);
 
   return (
-    <div className={`p-4 ${isSidebarOpen ? "" : "w-full"}`}>
-      <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+    <div className={`p-2 ${isSidebarOpen ? "" : "w-full"}`}>
+      <div className="mb-2 flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
         <input
           type="text"
           placeholder="Search..."
           value={search}
           onChange={handleFilterDataInput}
-          className="w-full rounded-lg border-2 border-slate-400 p-2 focus:outline-0 lg:w-1/3"
+          className="w-full rounded-lg border-2 border-slate-400 p-1 focus:outline-0 lg:w-1/6"
         />
-        <div className="flex items-center gap-2">
-          <label
-            htmlFor="rowsPerPage"
-            className="text-sm font-medium text-gray-700"
-          >
+        <div className="flex items-center gap-1">
+          <label htmlFor="rowsPerPage" className="font-medium text-gray-700">
             Rows per page:
           </label>
           <select
             id="rowsPerPage"
             value={rowsPerPage}
             onChange={handleRowsPerPageChange}
-            className="rounded-lg border-2 border-slate-400 p-2 focus:outline-0"
+            className="rounded-lg border-2 border-slate-400 p-1 focus:outline-0"
           >
             <option value={5}>5</option>
             <option value={10}>10</option>
@@ -248,13 +258,13 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse border border-white">
+        <table className="w-full border-collapse">
           <thead>
             <tr className="bg-[#1a365d] text-white">
               {TABLE_HEADERS.ALL_DATA_TABLE.map((header) => (
                 <th
                   key={header}
-                  className="border border-white px-2 py-1 text-center whitespace-nowrap"
+                  className="border border-white px-1 py-0.5 text-center"
                 >
                   {header}
                 </th>
@@ -266,30 +276,26 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
               currentData.map((row, index) => (
                 <tr
                   key={row.newID}
-                  className={`border border-white ${getStatusColor(row.JOB_STATUS)}`}
+                  className="border-b-2 border-[#1a365d] px-1 py-0.5"
                 >
-                  <td className="border border-white px-2 py-1 whitespace-nowrap">
-                    {row.newID}
-                  </td>
-                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                  <td className="px-1 py-0.5 whitespace-nowrap">{row.newID}</td>
+                  <td className="px-1 py-0.5 whitespace-nowrap">
                     {row.JOB_ID}
                   </td>
-                  <td className="border border-white px-2 py-1 whitespace-nowrap">
-                    {row.NAME}
-                  </td>
-                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                  <td className="px-1 py-0.5 whitespace-nowrap">{row.NAME}</td>
+                  <td className="px-1 py-0.5 whitespace-nowrap">
                     {row.MOBILE}
                   </td>
-                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                  <td className="px-1 py-0.5 whitespace-nowrap">
                     {row.IN_DATE}
                   </td>
-                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                  <td className="px-1 py-0.5 whitespace-nowrap">
                     {row.OUT_DATE}
                   </td>
-                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                  <td className="px-1 py-0.5 whitespace-nowrap">
                     {row.ASSETS}
                   </td>
-                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                  <td className="px-1 py-0.5 whitespace-nowrap">
                     {editingStatus === row.JOB_ID ? (
                       <div className="flex items-center gap-1">
                         <select
@@ -297,7 +303,7 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
                           onChange={(e) =>
                             handleStatusChange(row.JOB_ID, e.target.value)
                           }
-                          className="rounded border border-gray-300 bg-white px-2 py-1 text-sm text-black focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                          className="rounded border border-gray-300 bg-white px-1 py-0.5 text-black focus:ring-2 focus:ring-blue-500 focus:outline-none"
                           disabled={updatingStatus === row.JOB_ID}
                         >
                           {statusOptions.map((status) => (
@@ -312,14 +318,14 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
                           <div className="flex items-center gap-1">
                             <button
                               onClick={() => handleStatusSave(row.JOB_ID)}
-                              className="rounded bg-green-500 px-2 py-1 text-xs text-white hover:bg-green-600"
+                              className="rounded bg-green-500 px-1 py-0.5 text-xs text-white hover:bg-green-600"
                               title="Save changes"
                             >
                               ✓
                             </button>
                             <button
                               onClick={handleStatusCancel}
-                              className="rounded bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600"
+                              className="rounded bg-red-500 px-1 py-0.5 text-xs text-white hover:bg-red-600"
                               title="Cancel changes"
                             >
                               ✕
@@ -339,34 +345,51 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
                       </div>
                     )}
                   </td>
-                  <td className="border border-white px-2 py-1">
+                  <td className="px-1 py-0.5 whitespace-nowrap">
                     {row.SOLUTION_PROVIDED && row.SOLUTION_PROVIDED.length > 5
                       ? `${row.SOLUTION_PROVIDED.substring(0, 5)}...`
                       : row.SOLUTION_PROVIDED}
                   </td>
-                  <td className="border border-white px-2 py-1 whitespace-nowrap">
+                  <td className="px-1 py-0.5 whitespace-nowrap">
                     {row.AMOUNT}
                   </td>
-                  <td className="border border-white px-2 py-1 text-center whitespace-nowrap">
-                    <div className="flex justify-center gap-4">
+                  <td className="px-1 py-0.5 text-center whitespace-nowrap">
+                    <div className="flex justify-center gap-2">
                       <button
-                        className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
-                        onClick={() => handleView(row.JOB_ID)}
+                        className="flex items-center justify-center self-center border border-black bg-black px-1.5 py-1 text-white hover:bg-white hover:text-black"
+                        onClick={() => handleDownload(row.JOB_ID)}
+                        title="Download"
                       >
-                        View
+                        <BiSolidDownload size={14} />
                       </button>
                       <button
-                        className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
-                        onClick={() => handleEdit(row.JOB_ID)}
+                        className="flex items-center justify-center self-center border border-green-500 bg-green-500 px-1.5 py-1 text-white hover:bg-white hover:text-green-500"
+                        onClick={() => handleWhatsApp(row.JOB_ID)}
+                        title="Send WhatsApp"
                       >
-                        Edit
+                        <BiLogoWhatsapp size={14} />
+                      </button>
+                      <button
+                        className={`flex items-center justify-center self-center border-1 border-white px-1.5 py-1 text-white ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
+                        onClick={() => handleView(row.JOB_ID)}
+                        title="View Details"
+                      >
+                        <BiSolidShow size={14} />
+                      </button>
+                      <button
+                        className={`flex items-center justify-center self-center border-1 border-white px-1.5 py-1 text-white ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
+                        onClick={() => handleEdit(row.JOB_ID)}
+                        title="Edit Job"
+                      >
+                        <BiSolidEdit size={14} />
                       </button>
                       {position === "ADMIN" && (
                         <button
-                          className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+                          className={`flex items-center justify-center self-center border-1 border-white px-1.5 py-1 text-white ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
                           onClick={() => handleDelete(row.JOB_ID)}
+                          title="Delete Job"
                         >
-                          Delete
+                          <BiSolidTrash size={14} />
                         </button>
                       )}
                     </div>
@@ -390,7 +413,7 @@ const AllDataTable = ({ allData, openPopup, openDeletePopup }) => {
       {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="mt-6 flex flex-col items-center justify-between gap-4 lg:flex-row">
-          <div className="text-sm text-gray-700">
+          <div className="text-gray-700">
             Showing {startIndex + 1} to {Math.min(endIndex, totalRows)} of{" "}
             {totalRows} entries
           </div>

@@ -64,11 +64,11 @@ const Header = () => {
           </Link>
         </div>
 
-        <h1 className="hidden text-center font-bold text-[#ffffff] lg:block">
+        <h1 className="hidden text-center text-[#ffffff] lg:block">
           {name} - {position}
         </h1>
 
-        <h1 className="block text-center font-bold text-[#ffffff] lg:hidden">
+        <h1 className="block text-center text-[#ffffff] lg:hidden">
           {name}
           <br />
           {position}

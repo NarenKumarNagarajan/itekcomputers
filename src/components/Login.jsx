@@ -102,7 +102,7 @@ const Login = () => {
 
       {(errors.general || apiError) && (
         <div className="relative mt-6 mb-3 w-5/6 rounded-lg border-2 border-red-500 bg-red-50 p-3 text-center text-red-600 lg:w-1/3">
-          <p className="font-bold">{errors.general || apiError}</p>
+          <p className="">{errors.general || apiError}</p>
         </div>
       )}
 
@@ -162,7 +162,7 @@ const Login = () => {
         <button
           onClick={formValidation}
           disabled={isLoading}
-          className="mt-2 flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-[#1a365d] px-3 py-1.5 font-bold text-white transition-colors hover:bg-white hover:text-[#1a365d] disabled:opacity-50"
+          className="mt-2 flex w-[120px] items-center justify-center gap-2 self-center rounded-full border-2 border-white bg-[#1a365d] px-3 py-1.5 text-white transition-colors hover:bg-white hover:text-[#1a365d] disabled:opacity-50"
         >
           {isLoading ? (
             <LoadingSpinner size="small" />

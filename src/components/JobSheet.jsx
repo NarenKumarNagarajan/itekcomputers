@@ -13,7 +13,6 @@ import {
   PICKERS_URL,
   BUTTON_BASE_STYLE,
   BUTTON_COLORS,
-  BUTTON_SIZES,
 } from "../utils/globalConstants";
 
 const initialFormState = {
@@ -44,7 +43,7 @@ const initialFormState = {
 };
 
 const SectionHeader = ({ title }) => (
-  <h1 className="w-full border-2 border-[#1a365d] bg-[#1a365d] p-2 font-bold text-white">
+  <h1 className="w-full border-2 border-[#1a365d] bg-[#1a365d] p-2 text-white">
     {title}
   </h1>
 );
@@ -55,7 +54,7 @@ const CustomerDetails = ({ formData, errors, handleChange }) => (
     <div className="mt-4 space-y-4">
       {/* Job ID */}
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">Job ID</label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Job ID</label>
         <div className="w-2/3">
           <input
             type="text"
@@ -70,9 +69,7 @@ const CustomerDetails = ({ formData, errors, handleChange }) => (
       </div>
       {/* Customer Name */}
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
-          Customer Name
-        </label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Customer Name</label>
         <div className="w-2/3">
           <input
             type="text"
@@ -89,9 +86,7 @@ const CustomerDetails = ({ formData, errors, handleChange }) => (
       </div>
       {/* Mobile Number */}
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
-          Mobile Number
-        </label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Mobile Number</label>
         <div className="w-2/3">
           <input
             type="tel"
@@ -108,9 +103,7 @@ const CustomerDetails = ({ formData, errors, handleChange }) => (
       </div>
       {/* Email Address */}
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
-          Email Address
-        </label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Email Address</label>
         <div className="w-2/3">
           <input
             type="email"
@@ -125,7 +118,7 @@ const CustomerDetails = ({ formData, errors, handleChange }) => (
       </div>
       {/* Address */}
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">Address</label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Address</label>
         <div className="w-2/3">
           <textarea
             name="address"
@@ -142,9 +135,7 @@ const CustomerDetails = ({ formData, errors, handleChange }) => (
       </div>
       {/* Assigned Engineer */}
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
-          Assigned Engineer
-        </label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Assigned Engineer</label>
         <div className="w-2/3">
           <select
             name="engineer"
@@ -165,9 +156,7 @@ const CustomerDetails = ({ formData, errors, handleChange }) => (
       </div>
       {/* Mode of Contact */}
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
-          Mode of Contact
-        </label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Mode of Contact</label>
         <div className="w-2/3">
           <select
             name="moc"
@@ -186,7 +175,7 @@ const CustomerDetails = ({ formData, errors, handleChange }) => (
       </div>
       {/* In Date */}
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">In Date</label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">In Date</label>
         <div className="w-2/3">
           <DatePicker
             selected={parse(formData.inDate, "dd/MM/yyyy", new Date())}
@@ -207,7 +196,7 @@ const CustomerDetails = ({ formData, errors, handleChange }) => (
       </div>
       {/* Out Date */}
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">Out Date</label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Out Date</label>
         <div className="w-2/3">
           <DatePicker
             selected={parse(formData.outDate, "dd/MM/yyyy", new Date())}
@@ -235,9 +224,7 @@ const ProductDetails = ({ formData, errors, handleChange }) => (
     <SectionHeader title="Product Details" />
     <div className="mt-4 space-y-4">
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
-          Asset Type
-        </label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Asset Type</label>
         <div className="w-2/3">
           <select
             name="assets"
@@ -257,9 +244,7 @@ const ProductDetails = ({ formData, errors, handleChange }) => (
         </div>
       </div>
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
-          Product Make
-        </label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Product Make</label>
         <div className="w-2/3">
           <select
             name="productMake"
@@ -279,9 +264,7 @@ const ProductDetails = ({ formData, errors, handleChange }) => (
         </div>
       </div>
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
-          Serial Number
-        </label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Serial Number</label>
         <div className="w-2/3">
           <input
             type="text"
@@ -297,9 +280,7 @@ const ProductDetails = ({ formData, errors, handleChange }) => (
         </div>
       </div>
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
-          Description
-        </label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Description</label>
         <div className="w-2/3">
           <textarea
             name="description"
@@ -315,9 +296,7 @@ const ProductDetails = ({ formData, errors, handleChange }) => (
         </div>
       </div>
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
-          Fault Type
-        </label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Fault Type</label>
         <div className="w-2/3">
           <select
             name="faultType"
@@ -337,9 +316,7 @@ const ProductDetails = ({ formData, errors, handleChange }) => (
         </div>
       </div>
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
-          Fault Description
-        </label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Fault Description</label>
         <div className="w-2/3">
           <textarea
             name="faultDesc"
@@ -355,9 +332,7 @@ const ProductDetails = ({ formData, errors, handleChange }) => (
         </div>
       </div>
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
-          Job Status
-        </label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Job Status</label>
         <div className="w-2/3">
           <select
             name="jobStatus"
@@ -377,9 +352,7 @@ const ProductDetails = ({ formData, errors, handleChange }) => (
         </div>
       </div>
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">
-          Solution Provided
-        </label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Solution Provided</label>
         <div className="w-2/3">
           <textarea
             name="solutionProvided"
@@ -395,7 +368,7 @@ const ProductDetails = ({ formData, errors, handleChange }) => (
         </div>
       </div>
       <div className="my-3 flex w-full items-center">
-        <label className="mr-2 w-1/3 font-bold text-[#1a365d]">Amount</label>
+        <label className="mr-2 w-1/3 text-[#1a365d]">Amount</label>
         <div className="w-2/3">
           <input
             type="number"
@@ -545,7 +518,7 @@ const JobSheet = () => {
     <div className="flex-1 overflow-auto p-4">
       {message.text && (
         <div
-          className={`mb-4 rounded p-4 text-center text-lg font-bold ${
+          className={`mb-4 rounded p-4 text-center ${
             message.type === "success"
               ? "bg-green-100 text-green-700"
               : "bg-red-100 text-red-700"
@@ -556,7 +529,7 @@ const JobSheet = () => {
       )}
 
       {apiError && (
-        <div className="mb-4 rounded bg-red-100 p-4 text-center text-lg font-bold text-red-700">
+        <div className="mb-4 rounded bg-red-100 p-4 text-center text-red-700">
           {apiError}
         </div>
       )}
@@ -578,14 +551,14 @@ const JobSheet = () => {
         <div className="mt-8 flex justify-center space-x-4">
           <button
             type="submit"
-            className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
+            className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
             disabled={loading}
           >
             {loading ? "Saving..." : "Save"}
           </button>
           <button
             type="button"
-            className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+            className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
             onClick={(e) => handleSubmit(e, "saveAndPdf")}
             disabled={loading}
           >

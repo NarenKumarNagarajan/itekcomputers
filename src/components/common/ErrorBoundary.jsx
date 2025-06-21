@@ -21,7 +21,7 @@ class ErrorBoundary extends Component {
       return (
         <div className="flex h-screen flex-col items-center justify-center bg-[#1a365d] p-4">
           <div className="w-full max-w-md rounded-lg bg-white p-6 text-center shadow-lg">
-            <h2 className="mb-4 text-2xl font-bold text-red-600">
+            <h2 className="mb-4 text-2xl text-red-600">
               Oops! Something went wrong
             </h2>
             <p className="mb-4 text-gray-600">
@@ -29,7 +29,7 @@ class ErrorBoundary extends Component {
             </p>
             <button
               onClick={() => window.location.reload()}
-              className="rounded-full bg-[#1a365d] px-6 py-2 font-bold text-white hover:bg-[#1a365d]/90"
+              className="rounded-full bg-[#1a365d] px-6 py-2 text-white hover:bg-[#1a365d]/90"
             >
               Refresh Page
             </button>

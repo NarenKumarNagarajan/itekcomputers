@@ -9,7 +9,6 @@ import {
   UPDATE_PICKERS_URL,
   BUTTON_BASE_STYLE,
   BUTTON_COLORS,
-  BUTTON_SIZES,
 } from "../utils/globalConstants";
 
 const menus = ["ENGINEER", "MOC", "ASSET", "PRODUCT", "FAULT", "STATUS"];
@@ -198,14 +197,14 @@ const ModifyOptions = () => {
     if (message.errorMsg) {
       return (
         <div className="my-4 rounded-lg bg-red-100 p-4 text-center">
-          <p className="font-bold text-red-700">{message.errorMsg}</p>
+          <p className="text-red-700">{message.errorMsg}</p>
         </div>
       );
     }
     if (message.successMsg) {
       return (
         <div className="my-4 rounded-lg bg-green-100 p-4 text-center">
-          <p className="font-bold text-green-700">{message.successMsg}</p>
+          <p className="text-green-700">{message.successMsg}</p>
         </div>
       );
     }
@@ -239,13 +238,13 @@ const ModifyOptions = () => {
               {editingPicker === row ? (
                 <>
                   <button
-                    className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
+                    className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
                     onClick={() => updatePicker(row)}
                   >
                     SAVE
                   </button>
                   <button
-                    className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+                    className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
                     onClick={handleEditCancel}
                   >
                     CANCEL
@@ -254,7 +253,7 @@ const ModifyOptions = () => {
               ) : (
                 <>
                   <button
-                    className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
+                    className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
                     onClick={() => {
                       setEditingPicker(row);
                       setEditValue(row);
@@ -263,7 +262,7 @@ const ModifyOptions = () => {
                     EDIT
                   </button>
                   <button
-                    className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+                    className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
                     onClick={() => openDeletePopup(row)}
                   >
                     DELETE
@@ -289,7 +288,7 @@ const ModifyOptions = () => {
           <button
             key={menu}
             onClick={() => setMenuSelected(menu)}
-            className={`mb-2 w-[100px] rounded-full border-2 px-3 py-2 text-sm font-bold transition-colors ${
+            className={`mb-2 w-[100px] rounded-full border-2 px-3 py-2 transition-colors ${
               menuSelected === menu
                 ? "border-[#1a365d] bg-white text-[#1a365d]"
                 : "border-[#1a365d] bg-[#1a365d] text-white hover:bg-white hover:text-[#1a365d]"
@@ -303,7 +302,7 @@ const ModifyOptions = () => {
       {!inputOpen ? (
         <div className="mt-5 flex justify-center">
           <button
-            className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.LARGE} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
+            className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
             onClick={() => setInputOpen(true)}
           >
             ADD NEW {menuSelected}
@@ -319,13 +318,13 @@ const ModifyOptions = () => {
               onChange={(e) => setInputData(e.target.value)}
             />
             <button
-              className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
+              className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.SUCCESS.base} ${BUTTON_COLORS.SUCCESS.hover}`}
               onClick={insertPicker}
             >
               SAVE
             </button>
             <button
-              className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.SMALL} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+              className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
               onClick={resetInput}
             >
               CANCEL
@@ -339,7 +338,7 @@ const ModifyOptions = () => {
       <div className="mt-4 overflow-auto">
         <table className="w-full border border-gray-300">
           <thead>
-            <tr className="bg-[#1a365d] text-center font-bold text-white">
+            <tr className="bg-[#1a365d] text-center text-white">
               {tableHead.map((head, index) => (
                 <th key={index} className="border border-gray-300 px-2 py-1">
                   {head}
@@ -362,21 +361,19 @@ const ModifyOptions = () => {
           }}
         >
           <div className="rounded-lg bg-white p-4 shadow-lg">
-            <h2 className="mb-4 text-center text-xl font-bold">
-              Delete Picker
-            </h2>
+            <h2 className="mb-4 text-center">Delete Picker</h2>
             <p className="mb-6 text-center">
               Are you sure you want to delete &quot;{selectedPicker}&quot;?
             </p>
             <div className="flex justify-center space-x-4">
               <button
-                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
+                className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.PRIMARY.base} ${BUTTON_COLORS.PRIMARY.hover}`}
                 onClick={deletePicker}
               >
                 Delete
               </button>
               <button
-                className={`${BUTTON_BASE_STYLE} ${BUTTON_SIZES.MEDIUM} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
+                className={`${BUTTON_BASE_STYLE} ${BUTTON_COLORS.DANGER.base} ${BUTTON_COLORS.DANGER.hover}`}
                 onClick={closeDeletePopup}
               >
                 Close
